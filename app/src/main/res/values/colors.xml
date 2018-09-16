@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#148C46</color>
+    <color name="colorPrimaryDark">#f5148c46</color>
+    <color name="colorAccent">#D32F2F</color>
+
+    <color name="listDivider">#DDD</color>
+
+
+    <color name="primaryText">#494949</color>
+    <color name="secondaryText">#666</color>
+
+
+    <!--<color name="colorListSelect">#1e000000</color>-->
+    <color name="colorCloseButtonBg">#11000000</color>
+    <color name="colorPrimaryDarkSemiTransparent">#b5000000</color>
+    <color name="colorPrimaryDarkSemiDarkTransparent">#1e000000</color>
+    <color name="navigationBarColor">#e6148c46</color>
+    <color name="permissionDialogColor">#002906</color>
+    <color name="oneLyricsWhite">#FFF</color>
+    <color name="oneLyricsAlmostWhite">#EEE</color>
+    <color name="oneLyricsBlack">#333</color>
+
+    <!-- dark -->
+    <color name="listDivider_dark">#272727</color>
+
+    <color name="primaryText_dark">#BBBBBB</color>
+    <color name="secondaryText_dark">#999999</color>
+
+
+
+
+<!-- black -->
+    <color name="colorPrimaryBlack">#148C46</color>
+    <color name="colorPrimaryDarkBlack">#f5148c46</color>
+
+    <!--<color name="listDividerBlack">#DDD</color>-->
+
+    <color name="primaryTextBlack">#494949</color>
+    <!--<color name="secondaryTextBlack">#666</color>-->
+
+
+    <!--<color name="colorListSelectBlack">#1e000000</color>-->
+
+
+    <color name="appBackground_darkBlack">#000</color>
+    <color name="listDivider_darkBlack">#111</color>
+
+    <color name="primaryText_darkBlack">#AAA</color>
+    <color name="secondaryText_darkBlack">#888</color>
+
+
+   <!-- <color name="main">#FF31C27C</color>
+    <color name="main_dark">#FF535353</color>-->
+</resources>
