@@ -8,172 +8,21 @@
 
 
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-       <!-- <item name="listDivider">@color/listDivider</item>
-        <item name="appBackground">@color/oneLyricsWhite</item>
-        <item name="primaryText">@color/primaryText</item>
-        <item name="secondaryText">@color/secondaryText</item>
-        <item name="accentColor">@color/colorPrimary</item>
-        <item name="bottomNavBg">@color/colorPrimaryDark</item>-->
+        <item name="listDivider">@color/listDivider</item>
+        <item name="primaryText">@color/listDivider</item>
+        <item name="secondaryText">@color/listDivider</item>
+        <item name="accentColor">@color/listDivider</item>
+        <item name="bottomNavBg">@color/listDivider</item>
 
         <item name="colorPrimary">@color/listDivider</item>
         <item name="colorPrimaryDark">@color/listDivider</item>
-        <!--<item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/listDivider</item>
+        <item name="android:windowBackground">@color/listDivider</item>
+        <item name="android:textColorPrimary">@color/listDivider</item>
+        <item name="android:textColorSecondary">@color/listDivider</item>
 
-        <item name="android:navigationBarColor">@color/navigationBarColor</item>
-        <item name="android:windowBackground">@color/oneLyricsAlmostWhite</item>
-        <item name="android:textColorPrimary">@color/primaryText</item>
-        <item name="android:textColorSecondary">@color/secondaryText</item>
-
-        &lt;!&ndash; To change the popup menu and app text color  &ndash;&gt;
-        <item name="android:textColor">?primaryText</item>
-        &lt;!&ndash; To change the background of options menu&ndash;&gt;
-        <item name="android:itemBackground">?appBackground</item>
-        &lt;!&ndash; To theme the dialog &ndash;&gt;
-        <item name="android:alertDialogTheme">@style/DialogThemeDefault</item>
-        &lt;!&ndash; workaround for cardview not available issue&ndash;&gt;
-        <item name="cardViewStyle">@style/CardView</item>-->
-    </style>
-
-
-    <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="listDivider">@color/listDivider_dark</item>
-        <item name="appBackground">@color/oneLyricsBlack</item>
-        <item name="primaryText">@color/primaryText_dark</item>
-        <item name="secondaryText">@color/secondaryText_dark</item>
-        <item name="accentColor">@color/colorPrimary</item>
-        <item name="bottomNavBg">@color/colorPrimaryDark</item>
-
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-
-        <item name="android:navigationBarColor">@color/navigationBarColor</item>
-        <item name="android:windowBackground">@color/oneLyricsBlack</item>
-        <item name="android:textColorPrimary">@color/primaryText_dark</item>
-        <item name="android:textColorSecondary">@color/secondaryText_dark</item>
-
-        <!-- To change the popup menu and app text color  -->
-        <item name="android:textColor">?primaryText</item>
-        <!-- To change the background of options menu-->
-        <item name="android:itemBackground">?appBackground</item>
-        <!-- To theme the dialog -->
-        <item name="android:alertDialogTheme">@style/DialogThemeDark</item>
-        <!-- workaround for cardview not available issue-->
         <item name="cardViewStyle">@style/CardView</item>
-    </style>
-
-    <style name="AppTheme.SuperDark" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="listDivider">@color/listDivider_dark</item>
-        <item name="appBackground">@color/oneLyricsBlack</item>
-        <item name="primaryText">@color/primaryText_dark</item>
-        <item name="secondaryText">@color/secondaryText_dark</item>
-        <item name="accentColor">@color/colorPrimary</item>
-        <item name="bottomNavBg">@color/listDivider_dark</item>
-
-        <item name="colorPrimary">@color/listDivider_dark</item>
-        <item name="colorPrimaryDark">@color/listDivider_dark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-
-        <item name="android:navigationBarColor">@color/listDivider_dark</item>
-        <item name="android:windowBackground">@color/oneLyricsBlack</item>
-        <item name="android:textColorPrimary">@color/primaryText_dark</item>
-        <item name="android:textColorSecondary">@color/secondaryText_dark</item>
-
-        <!-- To change the popup menu and app text color  -->
-        <item name="android:textColor">?primaryText</item>
-        <!-- To change the background of options menu-->
-        <item name="android:itemBackground">?appBackground</item>
-        <!-- To theme the dialog -->
-        <item name="android:alertDialogTheme">@style/DialogThemeDark</item>
-        <!-- workaround for cardview not available issue-->
-        <item name="cardViewStyle">@style/CardView</item>
-    </style>
-
-    <style name="AppTheme.Black" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="listDivider">@color/listDivider_darkBlack</item>
-        <item name="appBackground">@color/appBackground_darkBlack</item>
-        <item name="primaryText">@color/primaryText_darkBlack</item>
-        <item name="secondaryText">@color/secondaryText_darkBlack</item>
-        <item name="accentColor">@color/colorPrimary</item>
-        <item name="bottomNavBg">@color/colorPrimaryDark</item>
-
-        <item name="colorPrimary">@color/colorPrimaryBlack</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlack</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-
-        <item name="android:navigationBarColor">@color/navigationBarColor</item>
-        <item name="android:windowBackground">@color/appBackground_darkBlack</item>
-        <item name="android:textColorPrimary">@color/primaryText_darkBlack</item>
-        <item name="android:textColorSecondary">@color/secondaryText_darkBlack</item>
-
-        <!-- To change the popup menu and app text color  -->
-        <item name="android:textColor">?primaryText</item>
-        <!-- To change the background of options menu-->
-        <item name="android:itemBackground">?appBackground</item>
-        <!-- To theme the dialog -->
-        <item name="android:alertDialogTheme">@style/DialogThemeBlack</item>
-        <!-- workaround for cardview not available issue-->
-        <item name="cardViewStyle">@style/CardView</item>
-    </style>
-
-    <style name="AppTheme.PitchBlack" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="listDivider">@color/listDivider_darkBlack</item>
-        <item name="appBackground">@color/appBackground_darkBlack</item>
-        <item name="primaryText">@color/primaryText_darkBlack</item>
-        <item name="secondaryText">@color/secondaryText_darkBlack</item>
-        <item name="accentColor">@color/colorPrimary</item>
-        <item name="bottomNavBg">@color/appBackground_darkBlack</item>
-
-        <item name="colorPrimary">@color/appBackground_darkBlack</item>
-        <item name="colorPrimaryDark">@color/appBackground_darkBlack</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-
-        <item name="android:navigationBarColor">@color/appBackground_darkBlack</item>
-        <item name="android:windowBackground">@color/appBackground_darkBlack</item>
-        <item name="android:textColorPrimary">@color/primaryText_darkBlack</item>
-        <item name="android:textColorSecondary">@color/secondaryText_darkBlack</item>
-
-        <!-- To change the popup menu and app text color  -->
-        <item name="android:textColor">?primaryText</item>
-        <!-- To change the background of options menu-->
-        <item name="android:itemBackground">?appBackground</item>
-        <!-- To theme the dialog -->
-        <item name="android:alertDialogTheme">@style/DialogThemeBlack</item>
-        <!-- workaround for cardview not available issue-->
-        <item name="cardViewStyle">@style/CardView</item>
-    </style>
-
-
-    <style name="DialogThemeDefault" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@drawable/background_drawable</item>
-    </style>
-
-    <style name="DialogThemeDark" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:background">@color/oneLyricsBlack</item>
-        <item name="android:windowBackground">@drawable/background_drawable</item>
-    </style>
-
-    <style name="DialogThemeBlack" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:background">@color/appBackground_darkBlack</item>
-        <item name="android:windowBackground">@drawable/background_drawable</item>
-    </style>
-
-    <style name="OneLyricsDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!--item RadioButton or CheckBox color-->
-        <item name="colorControlNormal">?primaryText</item>
-        <item name="colorControlActivated">?accentColor</item>
-        <!--item text color-->
-        <item name="textColorAlertDialogListItem">?primaryText</item>
-        <!--buttons color-->
-        <item name="colorAccent">?accentColor</item>
-        <!--title and message color-->
-        <item name="android:textColorPrimary">?primaryText</item>
-        <!--dialog background-->
-        <item name="android:windowBackground">@drawable/background_drawable</item>
+        <item name="colorAccent">@color/listDivider</item>
     </style>
 
 </resources>

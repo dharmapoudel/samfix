@@ -9,7 +9,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.provider.Settings.Global;
 import android.provider.Settings.Secure;
+import android.provider.Settings.System;
 import android.widget.Toast;
 
 public class Util {
@@ -21,6 +23,7 @@ public class Util {
     private static final String DISPLAY_DALTONIZER         = "accessibility_display_daltonizer";
 
     private static final String AUDIO_SAFE_VOLUME_STATE    = "audio_safe_volume_state";
+    private static final String MAX_BRIGHTNESS_DIALOG    = "shown_max_brightness_dialog";
 
     public static boolean hasPermission(Context context) {
         return context.checkCallingOrSelfPermission(PERMISSION) == PackageManager.PERMISSION_GRANTED;
@@ -61,35 +64,24 @@ public class Util {
                 && Secure.getInt(contentResolver, DISPLAY_DALTONIZER, 0) == 0;
     }
 
-    public static void toggleGreyscale(Context context, boolean greyscale) {
+    public static void toggleGreyscale(Context context, boolean value) {
         ContentResolver contentResolver = context.getContentResolver();
-        Secure.putInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, greyscale ? 1 : 0);
-        Secure.putInt(contentResolver, DISPLAY_DALTONIZER, greyscale ? 0 : -1);
+        Secure.putInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, value ? 0 : 1);
+        Secure.putInt(contentResolver, DISPLAY_DALTONIZER, value ? -1 : 0);
     }
 
-
-
-
-    public static boolean isMaxVolumeWarningDisabled(Context context) {
-        return Secure.getInt(context.getContentResolver(), AUDIO_SAFE_VOLUME_STATE, 3) == 2;
+    public static void toggleMaxVolumeWarning(Context context, boolean value) {
+        Global.putInt(context.getContentResolver(), AUDIO_SAFE_VOLUME_STATE, value ? 3 : 2);
     }
 
-    public static void toggleMaxVolumeWarning(Context context, boolean enabled) {
-        ContentResolver contentResolver = context.getContentResolver();
-        Secure.putInt(contentResolver, AUDIO_SAFE_VOLUME_STATE, enabled ? 2 : 3);
+    public static void toggleMaxBrightnessWarning(Context context, boolean value) {
+
+        System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
     }
 
-
-
-    public static boolean isMaxBrightnessWarningDisabled(Context context) {
-        ContentResolver contentResolver = context.getContentResolver();
-        return Secure.getInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, 0) == 1
-                && Secure.getInt(contentResolver, DISPLAY_DALTONIZER, 0) == 0;
-    }
-
-    public static void toggleMaxBrightnessWarning(Context context, boolean greyscale) {
-        ContentResolver contentResolver = context.getContentResolver();
-        Secure.putInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, greyscale ? 1 : 0);
-        Secure.putInt(contentResolver, DISPLAY_DALTONIZER, greyscale ? 0 : -1);
+    public static void setAnimationScale(Context context, float value) {
+        Global.putFloat(context.getContentResolver(), "window_animation_scale", value);
+        Global.putFloat(context.getContentResolver(), "transition_animation_scale", value);
+        Global.putFloat(context.getContentResolver(), "animator_duration_scale", value);
     }
 }

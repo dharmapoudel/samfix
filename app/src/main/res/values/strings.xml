@@ -1,23 +1,36 @@
 <resources>
-    <string name="app_name">Sam Fix</string>
+    <string name="app_name">SamFix</string>
     <string name="tips_title">Need Permission!</string>
     <string name="tips_ok">OK</string>
     <string name="tips_copy">COPY</string>
     <string name="copy_done">Copy Success</string>
     <string name="tips">Before use this Application, you need to use adb tools to grant permission, copy below command and exec it on a PC:\n\n%1$s\n\nOr you can use root to grant permission.</string>
     <string name="root_failure">root permission not granted</string>
-    <string name="connect">Connect</string>
-    <string name="telegram">Telegram</string>
-    <string name="telegram_description">You can reach me on the Telegram</string>
-    <string name="instagram">Instagram</string>
-    <string name="instagram_description">You can reach me on the Instagram</string>
+
     <string name="toggle_settings">Toggle Settings</string>
-    <string name="share">Share</string>
+
     <string name="greyscale">Greyscale</string>
     <string name="greyscale_description">Turn on black and white mode</string>
-    <string name="todo">TODO</string>
-    <string name="max_volume">Max Volume</string>
-    <string name="max_volume_description">Disable ma volume warning</string>
+
+    <string name="max_volume">Max Volume - needs device restart</string>
+    <string name="max_volume_description">Disable max volume warning</string>
+
     <string name="max_brightness">Max Brightness</string>
     <string name="max_brightness_description">Disable max brightness warning</string>
+
+    <string name="animation_scale">Animation Scale</string>
+    <string name="animation_scale_description">Change animation scale to .25</string>
+
+
+    <string name="support">Support</string>
+    <string name="donate">Support Development</string>
+    <string name="donate_description">If you enjoy using Sam Fix consider donating.</string>
+
+    <string name="rate">Rate App</string>
+    <string name="rate_description">Happy with the app? Give us 5 star review.</string>
+    <string name="mail">Send Email</string>
+    <string name="mail_description">Bugs? Feature request? Send us an email.</string>
+    <string name="thank_you">Thank you for supporting!</string>
+    <string name="next_time">Appreciate your intention. Next time perhaps!</string>
+    <string name="app_desc">Fix all annoying things on Samsung!</string>
 </resources>

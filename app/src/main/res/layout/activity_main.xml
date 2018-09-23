@@ -1,354 +1,432 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:background="@color/listDivider"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card1"
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_icon" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/app_desc"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        card_view:cardElevation="2dp"
-
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        app:cardCornerRadius="10dp"
-        android:background="@android:color/white"
-        android:focusable="true">
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <android.support.v7.widget.CardView
+                android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="@string/toggle_settings"
-                android:textColor="@android:color/black"
-                android:textSize="17sp" />
-
-            <!--greyscale toggle-->
-            <LinearLayout
-                android:id="@+id/telegram1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:minHeight="15dp"
-                android:onClick="toggleGreyScale"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/greyscale_toggle"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/toggle_off"
-                    android:contentDescription="@string/todo" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@android:color/white"
+                android:elevation="2dp"
+                app:cardCornerRadius="10dp"
+                tools:style="@style/CardView">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
+                    android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/greyscale"
-                        android:textColor="@android:color/black" />
+                        android:padding="12dp"
+                        android:text="@string/toggle_settings"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <!--max volume toggle-->
+                    <LinearLayout
+                        android:id="@+id/max_volume"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/greyscale_description"
-                        android:textColor="@android:color/black" />
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:onClick="toggleMaxVolume"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/max_volume_toggle"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/toggle_off"
+                            android:contentDescription="@string/max_volume" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/max_volume"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/max_volume_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!--max brightness toggle-->
+                    <LinearLayout
+                        android:id="@+id/max_brightness"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:onClick="toggleMaxBrightness"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/max_brightness_toggle"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/toggle_off"
+                            android:contentDescription="@string/max_brightness" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/max_brightness"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/max_brightness_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!--animation scale toggle-->
+                    <LinearLayout
+                        android:id="@+id/animation_scale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:onClick="setAnimationScale"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/animation_scale_toggle"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/toggle_off"
+                            android:contentDescription="@string/animation_scale" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/animation_scale"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:id="@+id/animation_scale_description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/animation_scale_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!--greyscale toggle-->
+                    <LinearLayout
+                        android:id="@+id/greyscale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:onClick="toggleGreyScale"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/greyscale_toggle"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/toggle_off"
+                            android:contentDescription="@string/greyscale" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/greyscale"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/greyscale_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <!--max volume toggle-->
-            <LinearLayout
-                android:id="@+id/max_volume"
+           <!-- <android.support.v7.widget.CardView
+                android:id="@+id/card3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:minHeight="15dp"
-                android:onClick="toggleMaxVolume"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/max_volume_toggle"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/toggle_off"
-                    android:contentDescription="@string/todo" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@android:color/white"
+                android:elevation="2dp"
+                app:cardCornerRadius="10dp"
+                tools:style="@style/CardView">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
+                    android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/max_volume"
-                        android:textColor="@android:color/black" />
+                        android:padding="12dp"
+                        android:text="@string/support"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <LinearLayout
+                        android:id="@+id/donate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/max_volume_description"
-                        android:textColor="@android:color/black" />
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/donate"
+                            android:contentDescription="@string/donate" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/donate"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/donate_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>-->
 
-            <!--max brightness toggle-->
-            <LinearLayout
-                android:id="@+id/max_brightness"
+            <android.support.v7.widget.CardView
+                android:id="@+id/card2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:minHeight="15dp"
-                android:onClick="toggleMaxBrightness"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/max_brightness_toggle"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/toggle_off"
-                    android:contentDescription="@string/todo" />
+                android:layout_margin="15dp"
+                android:background="@android:color/white"
+                android:elevation="2dp"
+                app:cardCornerRadius="10dp"
+                tools:style="@style/CardView">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
+                    android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/max_brightness"
-                        android:textColor="@android:color/black" />
+                        android:padding="12dp"
+                        android:text="@string/rate"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <LinearLayout
+                        android:id="@+id/rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/max_brightness_description"
-                        android:textColor="@android:color/black" />
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/star"
+                            android:contentDescription="@string/rate" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/rate"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/rate_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_horizontal"
+                        android:minHeight="15dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/mail_image"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="15dp"
+                            android:background="@drawable/telegram"
+                            android:contentDescription="@string/mail" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mail"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mail_description"
+                                android:textColor="@android:color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
 
-
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardElevation="2dp"
-
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        app:cardCornerRadius="10dp"
-        android:background="@android:color/white"
-        android:focusable="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="@string/connect"
-                android:textColor="@android:color/black"
-                android:textSize="17sp" />
-
-            <LinearLayout
-                android:id="@+id/telegram2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:minHeight="15dp"
-                android:onClick="app_telegram"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/telegram"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/telegram"
-                    android:contentDescription="@string/todo" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/telegram"
-                        android:textColor="@android:color/black" />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/telegram_description"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/instagram2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:minHeight="15dp"
-                android:onClick="app_insta"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/instagram"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/instagram"
-                    android:contentDescription="@string/todo" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/instagram"
-                        android:textColor="@android:color/black" />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/instagram_description"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardElevation="2dp"
-
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        app:cardCornerRadius="10dp"
-        android:background="@android:color/white"
-        android:focusable="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="@string/share"
-                android:textColor="@android:color/black"
-                android:textSize="17sp" />
-
-            <LinearLayout
-                android:id="@+id/share"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:minHeight="15dp"
-                android:onClick="app_telegram"
-                android:orientation="horizontal">
-
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/share"
-                    android:contentDescription="@string/todo" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/telegram"
-                        android:textColor="@android:color/black" />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/telegram_description"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-
-
+    </ScrollView>
 
 </LinearLayout>
