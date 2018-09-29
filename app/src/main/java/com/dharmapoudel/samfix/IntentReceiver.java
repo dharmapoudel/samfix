@@ -29,11 +29,11 @@ public class IntentReceiver extends BroadcastReceiver {
             if(pref.pref_enable_greyscale )
                 Util.toggleMaxBrightnessWarning(context, false);
 
-            Util.setAnimationScale(context, pref.pref_animation_duration);
+            //AnimatorDurationUtil.setAnimatorScale(context, pref.pref_animation_duration);
 
 
         } else if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-            Toast.makeText(context, "----------------Received boot completed --------------", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "----------------Received boot completed --------------", Toast.LENGTH_SHORT).show();
             Log.i("IntentReceiver", "Received boot completed ");
             Intent delayedIntent = new Intent(context, IntentReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, delayedIntent, 0);

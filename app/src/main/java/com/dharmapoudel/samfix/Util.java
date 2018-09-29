@@ -15,6 +15,8 @@ import android.provider.Settings.System;
 import android.widget.Toast;
 
 public class Util {
+    private static final String TAG = Util.class.getSimpleName();
+
     private static final String PERMISSION = "android.permission.WRITE_SECURE_SETTINGS";
     private static final String COMMAND    = "adb shell pm grant " + BuildConfig.APPLICATION_ID + " " + PERMISSION;
     private static final String SU_COMMAND = "su -c pm grant " + BuildConfig.APPLICATION_ID + " " + PERMISSION;
@@ -48,7 +50,7 @@ public class Util {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             Runtime.getRuntime().exec(SU_COMMAND).waitFor();
-                            toggleGreyscale(context, !isGreyscaleEnabled(context));
+                            toggleGreyScale(context, !isGreyScaleEnabled(context));
                         } catch (Exception e) {
                             Toast.makeText(context, R.string.root_failure, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
@@ -58,13 +60,13 @@ public class Util {
                 .create();
     }
 
-    public static boolean isGreyscaleEnabled(Context context) {
+    public static boolean isGreyScaleEnabled(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
         return Secure.getInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, 0) == 1
                 && Secure.getInt(contentResolver, DISPLAY_DALTONIZER, 0) == 0;
     }
 
-    public static void toggleGreyscale(Context context, boolean value) {
+    public static void toggleGreyScale(Context context, boolean value) {
         ContentResolver contentResolver = context.getContentResolver();
         Secure.putInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, value ? 0 : 1);
         Secure.putInt(contentResolver, DISPLAY_DALTONIZER, value ? -1 : 0);
@@ -79,9 +81,4 @@ public class Util {
         System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
     }
 
-    public static void setAnimationScale(Context context, float value) {
-        Global.putFloat(context.getContentResolver(), "window_animation_scale", value);
-        Global.putFloat(context.getContentResolver(), "transition_animation_scale", value);
-        Global.putFloat(context.getContentResolver(), "animator_duration_scale", value);
-    }
 }

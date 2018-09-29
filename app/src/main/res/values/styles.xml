@@ -25,4 +25,18 @@
         <item name="colorAccent">@color/listDivider</item>
     </style>
 
+    <style name="Theme" parent="@android:style/Theme.Material.Light">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorAccent">@color/primary</item>
+    </style>
+
+    <style name="Theme.Widget" />
+
+    <style name="Theme.Widget.RadioButton">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:drawableStart">?android:listChoiceIndicatorSingle</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
 </resources>

@@ -1,12 +1,14 @@
-package com.dharmapoudel.samfix;
+package com.dharmapoudel.samfix.tiles;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
+import com.dharmapoudel.samfix.Util;
+
 @TargetApi(Build.VERSION_CODES.N)
-public class ToggleService extends TileService {
+public class GreyscaleTileService extends TileService {
 
     @Override
     public void onClick() {
@@ -24,7 +26,7 @@ public class ToggleService extends TileService {
             setState(Tile.STATE_ACTIVE);
         }
 
-        Util.toggleGreyscale(this, oldState == Tile.STATE_INACTIVE);
+        Util.toggleGreyScale(this, oldState == Tile.STATE_ACTIVE);
     }
 
 
@@ -37,7 +39,7 @@ public class ToggleService extends TileService {
     @Override
     public void onStartListening() {
         super.onStartListening();
-        boolean greyscaleEnable = Util.isGreyscaleEnabled(this);
-        setState(greyscaleEnable ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+        boolean greyScaleEnable = Util.isGreyScaleEnabled(this);
+        setState(greyScaleEnable ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
     }
 }

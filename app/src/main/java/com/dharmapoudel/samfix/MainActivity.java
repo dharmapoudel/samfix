@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         } else {
 
 
-
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
 
@@ -78,19 +77,27 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 maxBrightnessToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
-            //set animation duration
-            float animationDuration = pref.pref_animation_duration;
-            Util.setAnimationScale(context, animationDuration);
-            View animationScaleToggle = findViewById(R.id.animation_scale_toggle);
-            animationScaleToggle.setBackground(getDrawable((animationDuration == 0.25)? R.drawable.toggle_on: R.drawable.toggle_off));
-            ((TextView)findViewById(R.id.animation_scale_description)).setText("Animation scale is set to " + animationDuration);
-
         }
 
         addRateAppTouchListener();
         addSendEmailTouchListener();
         //addSupportDevelopmentTouchListener();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //update toggle with correct scale value
+        updateAnimationScale();
+    }
+
+    private void updateAnimationScale(){
+        float animationScale = AnimatorDurationUtil.getAnimatorScale(getApplicationContext());
+        View animationScaleToggle = findViewById(R.id.animation_scale_toggle);
+        animationScaleToggle.setBackground(getDrawable((animationScale != 0f)? R.drawable.toggle_on: R.drawable.toggle_off));
+        ((TextView)findViewById(R.id.animation_scale_description)).setText("Animation scale is set to " + animationScale);
     }
 
     private void addSendEmailTouchListener() {
@@ -145,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
         View greyScaleToggle = v.findViewById(R.id.greyscale_toggle);
         greyScaleToggle.setBackground(getDrawable(!pref.pref_enable_greyscale? R.drawable.toggle_on: R.drawable.toggle_off));
-        Util.toggleGreyscale(this, pref.pref_enable_greyscale);
+        Util.toggleGreyScale(this, pref.pref_enable_greyscale);
 
     }
 
@@ -170,16 +177,9 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void setAnimationScale(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
+        Intent intent = new Intent(this, AnimatorDurationActivity.class);
+        startActivity(intent);
 
-        float animationDuration = (pref.pref_animation_duration == 0.25f)? 0.50f : 0.25f;
-        pref.savePreference("pref_animation_duration", animationDuration);
-
-        View animationScaleToggle = findViewById(R.id.animation_scale_toggle);
-        ((TextView)findViewById(R.id.animation_scale_description)).setText("Animation scale is set to  " + animationDuration);
-        animationScaleToggle.setBackground(getDrawable((animationDuration == 0.25f)? R.drawable.toggle_on: R.drawable.toggle_off));
-        Util.setAnimationScale(this, animationDuration);
     }
 
 

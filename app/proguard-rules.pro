@@ -15,3 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes *Annotation*
+-keep @**annotation** class * {*;}
+
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
+
+-dontwarn okhttp3.internal.platform.*
+-dontwarn okio.*
+-dontwarn retrofit2.*

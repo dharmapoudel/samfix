@@ -33,4 +33,14 @@
     <string name="thank_you">Thank you for supporting!</string>
     <string name="next_time">Appreciate your intention. Next time perhaps!</string>
     <string name="app_desc">Fix all annoying things on Samsung!</string>
+
+    <string name="animation_off">Animation off</string>
+    <string name="animation_scale_1_4x">Animation scale 0.25x</string>
+    <string name="animation_scale_0_5x">Animation scale .5x</string>
+    <string name="animation_scale_1x">Animation scale 1x</string>
+    <string name="animation_scale_1_5x">Animation scale 1.5x</string>
+    <string name="animation_scale_2x">Animation scale 2x</string>
+    <string name="animation_scale_5x">Animation scale 5x</string>
+    <string name="animation_scale_10x">Animation scale 10x</string>
+    <string name="animator_duration">Animator duration</string>
 </resources>
