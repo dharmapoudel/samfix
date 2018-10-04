@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.provider.Settings.Global;
 import android.provider.Settings.Secure;
 import android.provider.Settings.System;
@@ -73,12 +74,19 @@ public class Util {
     }
 
     public static void toggleMaxVolumeWarning(Context context, boolean value) {
+        //Toast.makeText(context, "Toggling volume warning to: " + !value, Toast.LENGTH_LONG).show();
         Global.putInt(context.getContentResolver(), AUDIO_SAFE_VOLUME_STATE, value ? 3 : 2);
     }
 
     public static void toggleMaxBrightnessWarning(Context context, boolean value) {
-
         System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
     }
 
+    public static void toggleData(Context context, boolean value) {
+        Settings.Global.putInt(context.getContentResolver(), "mobile_data", value ? 0 : 1);
+    }
+
+    public static boolean isDataToggled(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "mobile_data", 0) == 1;
+    }
 }

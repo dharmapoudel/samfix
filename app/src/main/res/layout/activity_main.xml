@@ -78,155 +78,358 @@
                         android:textColor="@android:color/black"
                         android:textSize="17sp" />
 
-                    <!--max volume toggle-->
-                    <LinearLayout
-                        android:id="@+id/max_volume"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_horizontal"
-                        android:minHeight="15dp"
-                        android:onClick="toggleMaxVolume"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/max_volume_toggle"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="15dp"
-                            android:background="@drawable/toggle_off"
-                            android:contentDescription="@string/max_volume" />
-
+                        <!--max volume toggle-->
                         <LinearLayout
+                            android:id="@+id/max_volume"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleMaxVolume"
+                            android:orientation="horizontal">
 
-                            <TextView
+                            <ImageView
+                                android:id="@+id/max_volume_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/max_volume" />
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/max_volume"
-                                android:textColor="@android:color/black" />
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/max_volume_description"
-                                android:textColor="@android:color/black" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/max_volume"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/max_volume_description"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/restart"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/shadow" />
+
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                    <!--max brightness toggle-->
-                    <LinearLayout
-                        android:id="@+id/max_brightness"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_horizontal"
-                        android:minHeight="15dp"
-                        android:onClick="toggleMaxBrightness"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/max_brightness_toggle"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="15dp"
-                            android:background="@drawable/toggle_off"
-                            android:contentDescription="@string/max_brightness" />
-
+                        <!--max brightness toggle-->
                         <LinearLayout
+                            android:id="@+id/max_brightness"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleMaxBrightness"
+                            android:orientation="horizontal">
 
-                            <TextView
+                            <ImageView
+                                android:id="@+id/max_brightness_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/max_brightness" />
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/max_brightness"
-                                android:textColor="@android:color/black" />
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/max_brightness_description"
-                                android:textColor="@android:color/black" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/max_brightness"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/max_brightness_description"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                    <!--animation scale toggle-->
-                    <LinearLayout
-                        android:id="@+id/animation_scale"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_horizontal"
-                        android:minHeight="15dp"
-                        android:onClick="setAnimationScale"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/animation_scale_toggle"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="15dp"
-                            android:background="@drawable/toggle_off"
-                            android:contentDescription="@string/animation_scale" />
-
+                        <!--animation scale toggle-->
                         <LinearLayout
+                            android:id="@+id/animation_scale"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="setAnimationScale"
+                            android:orientation="horizontal">
 
-                            <TextView
+                            <ImageView
+                                android:id="@+id/animation_scale_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/animation_scale" />
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/animation_scale"
-                                android:textColor="@android:color/black" />
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
 
-                            <TextView
-                                android:id="@+id/animation_scale_description"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/animation_scale_description"
-                                android:textColor="@android:color/black" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/animation_scale"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:id="@+id/animation_scale_description"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/animation_scale_description"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                    <!--greyscale toggle-->
-                    <LinearLayout
-                        android:id="@+id/greyscale"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_horizontal"
-                        android:minHeight="15dp"
-                        android:onClick="toggleGreyScale"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/greyscale_toggle"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="15dp"
-                            android:background="@drawable/toggle_off"
-                            android:contentDescription="@string/greyscale" />
-
+                        <!--bluetooth wifi toggle-->
                         <LinearLayout
+                            android:id="@+id/btwifi_popup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleBTWifiPopup"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/btwifi_popup_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/btwifi_popup" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btwifi_popup"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btwifi_popup_description"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/accessibility"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/shadow" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!--location toggle-->
+                        <LinearLayout
+                            android:id="@+id/location_popup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleLocationPopup"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            >
+
+                            <ImageView
+                                android:id="@+id/location_popup_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/location_popup" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/location_popup"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/location_popup_description"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/accessibility"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/shadow" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!--greyscale toggle-->
+                        <LinearLayout
+                            android:id="@+id/greyscale"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleGreyScale"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/greyscale_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/greyscale" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/greyscale"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/greyscale_description"
+                                    android:textColor="@android:color/black" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!--app backup toggle-->
+                        <LinearLayout
+                            android:id="@+id/backup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleAutoBackup"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/backup_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/backup" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/backup"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/backup_description"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/storage"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/shadow" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- mobile data toggle-->
+                        <LinearLayout
+                            android:id="@+id/data"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:minHeight="15dp"
+                            android:onClick="toggleData"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/data_toggle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/toggle_off"
+                                android:contentDescription="@string/data" />
+
+                            <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -236,21 +439,28 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/greyscale"
+                                android:text="@string/data"
                                 android:textColor="@android:color/black" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/greyscale_description"
+                                android:text="@string/data_description"
                                 android:textColor="@android:color/black" />
+
+                           <!-- <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/storage"
+                                android:textSize="12sp"
+                                android:textColor="@color/shadow" />-->
                         </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
-           <!-- <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView
                 android:id="@+id/card3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -276,7 +486,7 @@
                         android:textSize="17sp" />
 
                     <LinearLayout
-                        android:id="@+id/donate"
+                        android:id="@+id/support"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
@@ -291,7 +501,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_margin="15dp"
-                            android:background="@drawable/donate"
+                            android:background="@drawable/support"
                             android:contentDescription="@string/donate" />
 
                         <LinearLayout
@@ -315,7 +525,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>-->
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card2"
@@ -422,8 +632,6 @@
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-
-
 
         </LinearLayout>
 

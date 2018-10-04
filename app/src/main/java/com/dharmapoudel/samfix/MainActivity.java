@@ -1,5 +1,6 @@
 package com.dharmapoudel.samfix;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,19 +11,28 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
+import java.util.List;
+
+import static com.dharmapoudel.samfix.BootIntentReceiver.scheduleSettingsUpdateJob;
+import static com.dharmapoudel.samfix.BootIntentReceiver.unscheduleSettingsUpdateJob;
+
 public class MainActivity extends AppCompatActivity implements  BillingProcessor.IBillingHandler {
 
     private BillingProcessor bp;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     String PRODUCT_ID = "samfix";
-    private String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJHFpzqbwoVhAMVCpfo/5AU+bbesraxCKTz4uCwCzg4YzLSuQHVkttPSFaiPPTce3iTOWgJpXu2nw8e8vPnSHd0tJwlx2QJq2MW5vgq7l3oNyLY+2us6NbDMJDdfBPedEIrk7VN914ehQ29Qn+Yb7kZvR2SEKdaMl0EzhAlutBIJGKhTSIi5jBqkB9d3r6K9X7xhP7SbLT+JjQCWD+g1X2ey/RAVrZtipf70re0TLA6z6K44+WHqLKqn9G+z1DplmwhiI+EC8QvhGP6cXvehk3bS52P9p23wQZY9zHdHGN+ApfeDqigv/NlWHqSHLVCcHyoz7GrK2vOFjK9kvQuU4QIDAQAB";
+    private String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx//FhYCIEAQAgj1yfnaD1nLcI41fWkkx05wefBOGK3RP5pFRoE6w1c63uxf7hmHjLbdm8oAqAvIgekadrmaSnt5aiAk3W8GdGFuLBdP1TgvfCFwAboBle/0Bj/Cr2kkQnUl39TkVmMqe6cUhz/W0pH3kn/BLfd9nsdBhy6AVFnpECfoc+pNZiJ5zEMWL67JGiHXG6/4BTGZ0AYEFsLhjVw/R5SSiLRqqbcMZeb50Iu5sULiACanJtTH4VYcr92FxqYWGeHXjkrcG37YJyiWt+ez7H+9bEKDF0GPgFmzx+bXU6apKhm9hbpnhwBiDA2vv5t1iQLwVjvDNMpft4ltlZQIDAQAB";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,33 +65,58 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
             Preferences pref = new Preferences(context);
 
             //set grey scale switch
-            if(pref.pref_enable_greyscale ) {
+            if(pref.pref_enable_greyscale) {
                 Util.toggleMaxBrightnessWarning(context, false);
                 View greyScaleToggle = findViewById(R.id.greyscale_toggle);
                 greyScaleToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
+            //set the data toggle switch
+            /*if(Util.isDataToggled(context)) {
+                Util.toggleData(context, false);
+                View dataToggle = findViewById(R.id.data_toggle);
+                dataToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            }*/
 
-            //set max volume switch
-            if(pref.pref_disable_max_volume_warning ) {
+
+            //set max volume warning switch
+            if(pref.pref_disable_max_volume_warning) {
                 Util.toggleMaxVolumeWarning(context, false);
                 View maxVolumeToggle = findViewById(R.id.max_volume_toggle);
                 maxVolumeToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
 
-            //set max brightness switch
+            //set max brightness warning switch
             if(pref.pref_disable_max_brightness_warning ) {
                 Util.toggleMaxBrightnessWarning(context, false);
                 View maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
                 maxBrightnessToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
+            //set app auto backup switch
+            /*if(pref.pref_auto_backup) {
+                View autoBackupToggle = findViewById(R.id.backup_toggle);
+                autoBackupToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            }*/
+
+            //set bluetooth wifi switch
+            /*if(pref.pref_no_popup_on_bt_wifi) {
+                View btWifiToggle = findViewById(R.id.btwifi_popup_toggle);
+                btWifiToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            }*/
+
+            //set the location switch
+            /*if(pref.pref_no_popup_gm_location) {
+                View locationToggle = findViewById(R.id.location_popup_toggle);
+                locationToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            }*/
+
         }
 
         addRateAppTouchListener();
         addSendEmailTouchListener();
-        //addSupportDevelopmentTouchListener();
+        addSupportDevelopmentTouchListener();
 
     }
 
@@ -121,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
     private void addSupportDevelopmentTouchListener() {
 
-        /*findViewById(R.id.donate).setOnClickListener(new View.OnClickListener(){
+        /*findViewById(R.id.support).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 boolean isBillingProcessorAvailable = bp.isIabServiceAvailable(MainActivity.this);
@@ -131,6 +166,12 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 }
             }
         });*/
+        findViewById(R.id.support).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/dharmapoudel"));
+                startActivity(browserIntent);
+            }
+        });
     }
 
     private void addRateAppTouchListener() {
@@ -156,14 +197,26 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
     }
 
+    /*public void toggleData(View v){
+        boolean dataOn = Util.isDataToggled(this);
+        View dataToggle = v.findViewById(R.id.data_toggle);
+        dataToggle.setBackground(getDrawable(dataOn ? R.drawable.toggle_off: R.drawable.toggle_on));
+        Util.toggleData(this, dataOn);
+    }*/
+
     public void toggleMaxVolume(View v){
         Context context = getApplicationContext();
         Preferences pref = new Preferences(context);
         pref.savePreference("pref_disable_max_volume_warning", !pref.pref_disable_max_volume_warning);
 
         View maxVolumeToggle = v.findViewById(R.id.max_volume_toggle);
-        maxVolumeToggle.setBackground(getDrawable(!pref.pref_disable_max_volume_warning? R.drawable.toggle_on: R.drawable.toggle_off));
+        maxVolumeToggle.setBackground(getDrawable(pref.pref_disable_max_volume_warning? R.drawable.toggle_off: R.drawable.toggle_on));
         Util.toggleMaxVolumeWarning(this, pref.pref_disable_max_volume_warning);
+
+        if(pref.pref_disable_max_volume_warning)
+            unscheduleSettingsUpdateJob(context);
+        else
+            scheduleSettingsUpdateJob(context);
     }
 
     public void toggleMaxBrightness(View v){
@@ -181,6 +234,37 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         startActivity(intent);
 
     }
+
+    /*public void toggleAutoBackup(View v){
+        Context context = getApplicationContext();
+        Preferences pref = new Preferences(context);
+        pref.savePreference("pref_auto_backup", !pref.pref_auto_backup);
+
+        PermissionUtil.askForPermission(this);
+
+        boolean autoBackupEnabled = pref.pref_auto_backup;
+
+        View toggle = v.findViewById(R.id.backup_toggle);
+        toggle.setBackground(getDrawable(!autoBackupEnabled? R.drawable.toggle_on: R.drawable.toggle_off));
+    }*/
+
+    /*public void toggleBTWifiPopup(View v){
+        Context context = getApplicationContext();
+        Preferences pref = new Preferences(context);
+        pref.savePreference("pref_no_popup_on_bt_wifi", !pref.pref_no_popup_on_bt_wifi);
+
+        View toggle = v.findViewById(R.id.btwifi_popup_toggle);
+        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_bt_wifi? R.drawable.toggle_on: R.drawable.toggle_off));
+    }*/
+
+    /*public void toggleLocationPopup(View v){
+        Context context = getApplicationContext();
+        Preferences pref = new Preferences(context);
+        pref.savePreference("pref_no_popup_gm_location", !pref.pref_no_popup_gm_location);
+
+        View greyScaleToggle = v.findViewById(R.id.location_popup_toggle);
+        greyScaleToggle.setBackground(getDrawable(!pref.pref_no_popup_gm_location? R.drawable.toggle_on: R.drawable.toggle_off));
+    }*/
 
 
     @Override
@@ -208,5 +292,18 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     @Override
     public void onBillingInitialized() {
         //Toast.makeText(getApplicationContext(), "Billing initialized!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onAccessibilityEnableClick(View v) {
+        Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        startActivity(intent);
+    }
+
+    public static void logInstalledAccessiblityServices(Context context) {
+        AccessibilityManager am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        List<AccessibilityServiceInfo> runningServices = am.getInstalledAccessibilityServiceList();
+        for (AccessibilityServiceInfo service : runningServices) {
+            Log.i(TAG, service.getId());
+        }
     }
 }
