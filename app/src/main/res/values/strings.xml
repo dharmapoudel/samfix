@@ -26,13 +26,13 @@
 
     <string name="support">Support</string>
     <string name="donate">Support Development</string>
-    <string name="donate_description">If you enjoy using SamFix consider supporting.</string>
+    <string name="donate_description">Show your support and enable all options</string>
 
     <string name="rate">Rate App</string>
-    <string name="rate_description">Happy with the app? Give us 5 star review.</string>
+    <string name="rate_description">Happy with the app? Give us 5 star review</string>
 
     <string name="mail">Send Email</string>
-    <string name="mail_description">Bugs? Feature request? Send us an email.</string>
+    <string name="mail_description">Bugs? Feature request? Send us an email</string>
 
     <string name="thank_you">Thank you for supporting!</string>
     <string name="next_time">Appreciate your intention. Next time perhaps!</string>
@@ -58,12 +58,12 @@
 
     <string name="accessibility">turn on \'SamFix\' in settings > accessibility</string>
 
-    <string name="storage">Needs storage permission</string>
+    <string name="storage">needs storage permission(in backups/apps)</string>
     <string name="restart">Needs device restart</string>
-    <string name="accessibility_service_description">Samfix uses accessibility service to provide an easy way to get rid of annoying windows and popups.</string>
+    <string name="accessibility_service_description">Samfix uses accessibility service to provide an easy way to get rid of annoying windows and popups. No data is collected whatsoever!</string>
 
     <string name="mobile_data">Mobile data</string>
     <string name="data">Toggle data</string>
-    <string name="data_description">toggle data directly from the app</string>
+    <string name="data_description">toggle data directly from quick settings tile</string>
 
 </resources>

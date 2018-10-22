@@ -48,7 +48,7 @@
 
         </activity>
 
-        <!--<service
+        <service
             android:name=".tiles.DataToggleTileService"
             android:icon="@drawable/tile_data"
             android:label="@string/mobile_data"
@@ -56,7 +56,7 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-        </service>-->
+        </service>
 
         <service
             android:name=".tiles.AnimatorDurationTileService"
@@ -84,7 +84,7 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <!--<service android:name=".SamFixAccessibilityService"
+        <service android:name=".SamFixAccessibilityService"
             android:label="@string/app_name"
             android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -93,7 +93,7 @@
             </intent-filter>
             <meta-data android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
-        </service>-->
+        </service>
 
         <receiver android:name=".autobackup.BackupReceiver"
             android:enabled="true"

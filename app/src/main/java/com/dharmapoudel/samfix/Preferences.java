@@ -14,6 +14,7 @@ public class Preferences {
     public boolean  pref_auto_backup;
     public boolean  pref_no_popup_on_bt_wifi;
     public boolean  pref_no_popup_gm_location;
+    public boolean   supportEnabled;
 
     public float    pref_animation_duration = 0.50f;
 
@@ -30,12 +31,17 @@ public class Preferences {
         pref_auto_backup = mSharedPreferences.getBoolean("pref_auto_backup", false);
         pref_no_popup_on_bt_wifi = mSharedPreferences.getBoolean("pref_no_popup_on_bt_wifi", false);
         pref_no_popup_gm_location = mSharedPreferences.getBoolean("pref_no_popup_gm_location", false);
+        supportEnabled = mSharedPreferences.getBoolean("samfix", false);
     }
 
     public void savePreference(String key, boolean value){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
+    }
+
+    public SharedPreferences.Editor getEditor(){
+        return mSharedPreferences.edit();
     }
 
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
 
     lintOptions {
         checkReleaseBuilds false
@@ -30,9 +30,9 @@ android {
     defaultConfig {
         applicationId "com.dharmapoudel.samfix"
         minSdkVersion 21
-        targetSdkVersion 22
-        versionCode 10
-        versionName "1.9"
+        targetSdkVersion 26
+        versionCode 12
+        versionName "1.12"
         setProperty("archivesBaseName", "samfix-v" + versionCode + "(" + versionName + ")" + "_" + formattedDate)
     }
 

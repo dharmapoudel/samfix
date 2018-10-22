@@ -19,7 +19,7 @@ public class BackupTask extends AsyncTask<String, Void, Boolean> {
 
     private final Context mContext;
     private PackageManager mPackageManager;
-    private static final String APP_DIR = "samfix/";
+    private static final String APP_DIR = "backups/apps/";
 
     public BackupTask(Context context) {
         mContext = context.getApplicationContext();
