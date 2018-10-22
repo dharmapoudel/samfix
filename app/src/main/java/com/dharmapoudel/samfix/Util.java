@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.provider.Settings.Global;
 import android.provider.Settings.Secure;
 import android.provider.Settings.System;
+import android.util.Log;
 import android.widget.Toast;
 
 public class Util {
@@ -79,7 +80,11 @@ public class Util {
     }
 
     public static void toggleMaxBrightnessWarning(Context context, boolean value) {
-        System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
+        try {
+            System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
+        }catch(Exception e){
+            Log.e(TAG, "Exception occured while toggling max brightness "+ e.getMessage());
+        }
     }
 
     public static void toggleData(Context context, boolean value) {
@@ -88,5 +93,12 @@ public class Util {
 
     public static boolean isDataToggled(Context context) {
         return Settings.Global.getInt(context.getContentResolver(), "mobile_data", 0) == 1;
+    }
+
+    public static String getEnabledAccessibilityServices(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), "enabled_accessibility_services") ;
+    }
+    public static void setEnabledAccessibilityServices(Context context, String value) {
+        Settings.Secure.putString(context.getContentResolver(), "enabled_accessibility_services", value) ;
     }
 }

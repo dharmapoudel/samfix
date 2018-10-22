@@ -1,32 +1,45 @@
 package com.dharmapoudel.samfix.tiles;
 
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import android.widget.Toast;
 
+import com.dharmapoudel.samfix.Preferences;
 import com.dharmapoudel.samfix.Util;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class DataToggleTileService extends TileService {
 
+    private SharedPreferences mSharedPreferences;
+    private Preferences preferences;
+
     @Override
     public void onClick() {
         super.onClick();
 
-        if (!Util.hasPermission(this)) {
-            showDialog(Util.createTipsDialog(this));
-            return;
-        }
+        preferences = new Preferences(getApplicationContext());
+        if(preferences.supportEnabled) {
 
-        int oldState = getQsTile().getState();
-        if (oldState == Tile.STATE_ACTIVE) {
-            setState(Tile.STATE_INACTIVE);
+            if (!Util.hasPermission(this)) {
+                showDialog(Util.createTipsDialog(this));
+                return;
+            }
+
+            int oldState = getQsTile().getState();
+            if (oldState == Tile.STATE_ACTIVE) {
+                setState(Tile.STATE_INACTIVE);
+            } else {
+                setState(Tile.STATE_ACTIVE);
+            }
+
+            Util.toggleData(this, oldState == Tile.STATE_ACTIVE);
         } else {
-            setState(Tile.STATE_ACTIVE);
+            Toast.makeText(getApplicationContext(), "Only available after supporting!", Toast.LENGTH_SHORT).show();
         }
-
-        Util.toggleData(this, oldState == Tile.STATE_ACTIVE);
     }
 
     private void setState(int state) {
@@ -38,7 +51,11 @@ public class DataToggleTileService extends TileService {
     @Override
     public void onStartListening() {
         super.onStartListening();
-        boolean dataOn = Util.isDataToggled(this);
-        setState(dataOn ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean supportEnabled = mSharedPreferences.getBoolean("samfix", false);
+        if(supportEnabled) {
+            boolean dataOn = Util.isDataToggled(this);
+            setState(dataOn ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+        }
     }
 }
