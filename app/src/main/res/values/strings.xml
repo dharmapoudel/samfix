@@ -50,8 +50,15 @@
     <string name="backup">App Backup</string>
     <string name="backup_description">Automatically backup newly installed apps</string>
 
-    <string name="btwifi_popup">No BT/WIFI popup</string>
-    <string name="btwifi_popup_description">Disable popup on bluetooth and wifi</string>
+    <string name="bt_popup">No Bluetooth popup</string>
+    <string name="bt_popup_description">Disable popup on bluetooth</string>
+
+    <string name="wifi_popup">No Wifi popup</string>
+    <string name="wifi_popup_description">Disable popup on wifi</string>
+
+    <string name="sync_popup">No Sync popup</string>
+    <string name="sync_popup_description">Disable popup on auto sync</string>
+
 
     <string name="location_popup">No location dialog</string>
     <string name="location_popup_description">Disable location dialog in GM</string>

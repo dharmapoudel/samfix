@@ -81,7 +81,10 @@ public class Util {
 
     public static void toggleMaxBrightnessWarning(Context context, boolean value) {
         try {
-            System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
+
+            Settings.Secure.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
+            Settings.Global.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
+            Settings.System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
         }catch(Exception e){
             Log.e(TAG, "Exception occured while toggling max brightness "+ e.getMessage());
         }

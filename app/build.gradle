@@ -30,9 +30,9 @@ android {
     defaultConfig {
         applicationId "com.dharmapoudel.samfix"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 12
-        versionName "1.12"
+        targetSdkVersion 21
+        versionCode 13
+        versionName "1.13"
         setProperty("archivesBaseName", "samfix-v" + versionCode + "(" + versionName + ")" + "_" + formattedDate)
     }
 

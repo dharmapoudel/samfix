@@ -25,44 +25,56 @@ public class SamFixAccessibilityService extends AccessibilityService {
         Log.i(TAG, accessibilityEvent.toString());
         mPrefs = new Preferences(this);
 
+        if (accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            String accessibilityEventPackageName = (String) accessibilityEvent.getPackageName();
 
-        if (mPrefs.pref_no_popup_on_bt_wifi) {
-            if (accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                String accessibilityEventPackageName = (String) accessibilityEvent.getPackageName();
+            if (mPrefs.pref_no_popup_on_bt) {
+                    if (accessibilityEventPackageName.equals("com.android.settings")) {
+                        if (accessibilityEvent.getClassName().toString().equals("android.app.Dialog")) {
+                            List<CharSequence> texts = accessibilityEvent.getText();
+                            if (texts.get(0) != null && texts.get(0).toString().toLowerCase().equals("bluetooth")) {
+                                List<AccessibilityNodeInfo> nodeInfos = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("android:id/button1");
+                                for (AccessibilityNodeInfo nodeInfo : nodeInfos)
+                                    nodeInfo.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId());
+                            }
+                        }
+                    }
+            }
+
+            if (mPrefs.pref_no_popup_on_wifi) {
+                    if (accessibilityEventPackageName.equals("com.android.settings")) {
+                        if (accessibilityEvent.getClassName().toString().equals("com.samsung.android.settings.wifi.WifiPickerDialog")) {
+                            List<CharSequence> texts = accessibilityEvent.getText();
+                            if (texts.get(0) != null && texts.get(0).toString().toLowerCase().equals("wi-fi")) {
+                                List<AccessibilityNodeInfo> nodeInfos = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.android.settings:id/wifi_picker_dialog_cancel");
+                                for (AccessibilityNodeInfo nodeInfo : nodeInfos)
+                                    nodeInfo.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId());
+                            }
+                        }
+                    }
+            }
+
+            if (mPrefs.pref_no_popup_on_sync) {
                 if (accessibilityEventPackageName.equals("com.android.settings")) {
-                    if (accessibilityEvent.getClassName().toString().equals("android.app.Dialog")) {
-                        List<CharSequence> texts = accessibilityEvent.getText();
-                        if (texts.get(0) != null && texts.get(0).toString().toLowerCase().equals("bluetooth")) {
-                            List<AccessibilityNodeInfo> nodeInfos = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("android:id/button1");
-                            for (AccessibilityNodeInfo nodeInfo : nodeInfos)
+                    if (accessibilityEvent.getClassName().toString().equals("android.app.AlertDialog")) {
+                        final List<AccessibilityNodeInfo> nodeInfos = getRootInActiveWindow().findAccessibilityNodeInfosByText("OK");
+                        for (AccessibilityNodeInfo nodeInfo : nodeInfos) {
+                            if(nodeInfo.getViewIdResourceName().equalsIgnoreCase("android:id/button1"))
                                 nodeInfo.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId());
                         }
-
-                    }
-
-                    if (accessibilityEvent.getClassName().toString().equals("com.samsung.android.settings.wifi.WifiPickerDialog")) {
-                        List<CharSequence> texts = accessibilityEvent.getText();
-                        if (texts.get(0) != null && texts.get(0).toString().toLowerCase().equals("wi-fi")) {
-                            List<AccessibilityNodeInfo> nodeInfos = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.android.settings:id/wifi_picker_dialog_cancel");
-                            for (AccessibilityNodeInfo nodeInfo : nodeInfos)
-                                nodeInfo.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId());
-                        }
-
                     }
                 }
             }
-        }
 
-        if (mPrefs.pref_no_popup_gm_location) {
-            if (accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                if (accessibilityEvent.getClassName().toString().equals("com.google.android.location.settings.LocationSettingsCheckerActivity")) {
-                    clickButton("android:id/button2");
-                } else if (accessibilityEvent.getClassName().toString().equals("com.google.android.location.network.ConfirmAlertActivity")) {
-                    clickButton("android:id/button1");
-                }
+            if (mPrefs.pref_no_popup_gm_location) {
+                    if (accessibilityEvent.getClassName().toString().equals("com.google.android.location.settings.LocationSettingsCheckerActivity")) {
+                        clickButton("android:id/button2");
+                    } else if (accessibilityEvent.getClassName().toString().equals("com.google.android.location.network.ConfirmAlertActivity")) {
+                        clickButton("android:id/button1");
+                    }
             }
-        }
 
+        }
 
     }
 

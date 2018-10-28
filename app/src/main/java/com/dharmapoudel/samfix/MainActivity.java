@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     private Preferences pref;
     private Context context;
 
-    private View dataToggle, autoBackupToggle, btWifiToggle, locationToggle;
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //action bar settings
         ActionBar actionBar = getSupportActionBar();
@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 maxBrightnessToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
+            View dataToggle, autoBackupToggle, btToggle, wifiToggle, locationToggle, syncToggle;
+
+
             //set the data toggle switch
             dataToggle = findViewById(R.id.data_toggle);
             if(Util.isDataToggled(context)) {
@@ -113,10 +116,22 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 autoBackupToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
-            //set bluetooth wifi switch
-            btWifiToggle = findViewById(R.id.btwifi_popup_toggle);
-            if(pref.pref_no_popup_on_bt_wifi) {
-                btWifiToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            //set bluetooth switch
+            btToggle = findViewById(R.id.bt_popup_toggle);
+            if(pref.pref_no_popup_on_bt) {
+                btToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            }
+
+            //set wifi switch
+            wifiToggle = findViewById(R.id.wifi_popup_toggle);
+            if(pref.pref_no_popup_on_wifi) {
+                wifiToggle.setBackground(getDrawable(R.drawable.toggle_on));
+            }
+
+            //set sync switch
+            syncToggle = findViewById(R.id.sync_popup_toggle);
+            if(pref.pref_no_popup_on_sync) {
+                syncToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
             //set the location switch
@@ -261,13 +276,31 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         toggle.setBackground(getDrawable(!autoBackupEnabled? R.drawable.toggle_on: R.drawable.toggle_off));
     }
 
-    public void toggleBTWifiPopup(View v){
+    public void toggleBTPopup(View v){
         Context context = getApplicationContext();
         Preferences pref = new Preferences(context);
-        pref.savePreference("pref_no_popup_on_bt_wifi", !pref.pref_no_popup_on_bt_wifi);
+        pref.savePreference("pref_no_popup_on_bt", !pref.pref_no_popup_on_bt);
 
-        View toggle = v.findViewById(R.id.btwifi_popup_toggle);
-        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_bt_wifi? R.drawable.toggle_on: R.drawable.toggle_off));
+        View toggle = v.findViewById(R.id.bt_popup_toggle);
+        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_bt? R.drawable.toggle_on: R.drawable.toggle_off));
+    }
+
+    public void toggleWifiPopup(View v){
+        Context context = getApplicationContext();
+        Preferences pref = new Preferences(context);
+        pref.savePreference("pref_no_popup_on_wifi", !pref.pref_no_popup_on_wifi);
+
+        View toggle = v.findViewById(R.id.wifi_popup_toggle);
+        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_wifi? R.drawable.toggle_on: R.drawable.toggle_off));
+    }
+
+    public void toggleSyncPopup(View v){
+        Context context = getApplicationContext();
+        Preferences pref = new Preferences(context);
+        pref.savePreference("pref_no_popup_on_sync", !pref.pref_no_popup_on_sync);
+
+        View toggle = v.findViewById(R.id.sync_popup_toggle);
+        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_sync? R.drawable.toggle_on: R.drawable.toggle_off));
     }
 
     public void toggleLocationPopup(View v){
@@ -308,7 +341,8 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         View data = findViewById(R.id.data);
         View backup = findViewById(R.id.backup);
         View location_popup = findViewById(R.id.location_popup);
-        View btwifi_popup = findViewById(R.id.btwifi_popup);
+        View bt_popup = findViewById(R.id.bt_popup);
+        View wifi_popup = findViewById(R.id.wifi_popup);
 
         data.setAlpha(0.5f);
         data.setEnabled(false);
@@ -316,8 +350,10 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         backup.setEnabled(false);
         location_popup.setAlpha(0.5f);
         location_popup.setEnabled(false);
-        btwifi_popup.setAlpha(0.5f);
-        btwifi_popup.setEnabled(false);
+        bt_popup.setAlpha(0.5f);
+        bt_popup.setEnabled(false);
+        wifi_popup.setAlpha(0.5f);
+        wifi_popup.setEnabled(false);
 
         SharedPreferences.Editor editor = pref.getEditor();
         editor.putBoolean(PRODUCT_ID, false);
@@ -340,9 +376,13 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 location_popup.setEnabled(true);
                 location_popup.setVisibility(View.VISIBLE);
 
-                btwifi_popup.setAlpha(1.0f);
-                btwifi_popup.setEnabled(true);
-                btwifi_popup.setVisibility(View.VISIBLE);
+                bt_popup.setAlpha(1.0f);
+                bt_popup.setEnabled(true);
+                bt_popup.setVisibility(View.VISIBLE);
+
+                wifi_popup.setAlpha(1.0f);
+                wifi_popup.setEnabled(true);
+                wifi_popup.setVisibility(View.VISIBLE);
             }
         }
         editor.apply();
