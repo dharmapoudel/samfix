@@ -18,12 +18,6 @@ public class SettingsUpdateJobService extends JobService {
             if(pref.pref_disable_max_volume_warning )
                 Util.toggleMaxVolumeWarning(context, false);
 
-            if(pref.pref_disable_max_brightness_warning )
-                Util.toggleMaxBrightnessWarning(context, false);
-
-            /*if(pref.pref_enable_greyscale )
-                Util.toggleMaxBrightnessWarning(context, false);*/
-
             //AnimatorDurationUtil.setAnimatorScale(context, pref.pref_animation_duration);
 
 

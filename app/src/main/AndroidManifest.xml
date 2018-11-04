@@ -34,6 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".SamFixBrightnessAddonBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.dharmapoudel.samfix.Brightness" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".BootIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -105,5 +112,4 @@
         </receiver>
 
     </application>
-
 </manifest>

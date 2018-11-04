@@ -5,10 +5,13 @@ import android.app.Dialog;
 import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.provider.Settings.Global;
 import android.provider.Settings.Secure;
@@ -80,14 +83,28 @@ public class Util {
     }
 
     public static void toggleMaxBrightnessWarning(Context context, boolean value) {
-        try {
-
-            Settings.Secure.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
-            Settings.Global.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
-            Settings.System.putInt(context.getContentResolver(), MAX_BRIGHTNESS_DIALOG, value ? 0 : 1);
-        }catch(Exception e){
-            Log.e(TAG, "Exception occured while toggling max brightness "+ e.getMessage());
+        PackageManager pm = context.getPackageManager();
+        boolean isInstalled = isPackageInstalled("com.dharmapoudel.samfix.addon", pm);
+        if(isInstalled) {
+            Intent intent = new Intent("com.dharmapoudel.samfix.addon.Brightness");
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+        } else {
+            Toast.makeText(context, "Install SamFix Addon to enable this feature", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://labs.xda-developers.com/store/app/com.dharmapoudel.samfix.addon"));
+            context.startActivity(intent);
         }
+    }
+
+    private static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        boolean found = true;
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            found = false;
+        }
+        return found;
     }
 
     public static void toggleData(Context context, boolean value) {

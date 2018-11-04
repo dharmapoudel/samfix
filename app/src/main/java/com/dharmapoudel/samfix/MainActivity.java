@@ -1,9 +1,11 @@
 package com.dharmapoudel.samfix;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,15 +19,22 @@ import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.dharmapoudel.samfix.autobackup.BackupReceiver;
 
 import static com.dharmapoudel.samfix.BootIntentReceiver.scheduleSettingsUpdateJob;
 import static com.dharmapoudel.samfix.BootIntentReceiver.unscheduleSettingsUpdateJob;
 
-public class MainActivity extends AppCompatActivity implements  BillingProcessor.IBillingHandler {
+public class MainActivity extends AppCompatActivity implements  BillingProcessor.IBillingHandler, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private BillingProcessor bp;
     private Preferences pref;
     private Context context;
+
+    private SamFixBrightnessAddonBroadcastReceiver nReceiver;
+    private BackupReceiver backupReceiver;
+
+
+    private View maxBrightnessToggle;
 
 
 
@@ -37,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
 
         //action bar settings
         ActionBar actionBar = getSupportActionBar();
@@ -51,11 +60,26 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         bp.initialize();
 
 
+        //register the samfix brightness addon broadcast receiver
+        nReceiver = new SamFixBrightnessAddonBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(getResources().getString(R.string.samfix_brightness_broadcast_intent));
+        registerReceiver(nReceiver, filter);
+
+        backupReceiver = new BackupReceiver();
+        IntentFilter i = new IntentFilter();
+        i.addAction("android.intent.action.PACKAGE_ADDED");
+        registerReceiver(backupReceiver, i);
+
+
+        //registerReceiver(nReceiver, filter, getResources().getString(R.string.samfix_brightness_broadcast_intent), null);
+
+
+
         context = getApplicationContext();
         pref = new Preferences(context);
 
         if (!Util.hasPermission(this)) {
-
             Dialog dialog = Util.createTipsDialog(this);
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -64,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 }
             });
             dialog.show();
-
         } else {
 
             //automatically add to accessibility services
@@ -72,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
             //set grey scale switch
             if(pref.pref_enable_greyscale) {
-                Util.toggleMaxBrightnessWarning(context, false);
+                //Util.toggleMaxBrightnessWarning(context, false);
                 View greyScaleToggle = findViewById(R.id.greyscale_toggle);
                 greyScaleToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
@@ -84,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 dataToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
-
             //set max volume warning switch
             if(pref.pref_disable_max_volume_warning) {
                 Util.toggleMaxVolumeWarning(context, false);
@@ -92,16 +114,13 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 maxVolumeToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
-
             //set max brightness warning switch
             if(pref.pref_disable_max_brightness_warning ) {
-                Util.toggleMaxBrightnessWarning(context, false);
-                View maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
+                maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
                 maxBrightnessToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
 
             View dataToggle, autoBackupToggle, btToggle, wifiToggle, locationToggle, syncToggle;
-
 
             //set the data toggle switch
             dataToggle = findViewById(R.id.data_toggle);
@@ -139,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
             if(pref.pref_no_popup_gm_location) {
                 locationToggle.setBackground(getDrawable(R.drawable.toggle_on));
             }
-
         }
 
         addRateAppTouchListener();
@@ -151,9 +169,17 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     @Override
     protected void onResume() {
         super.onResume();
-
-        //update toggle with correct scale value
         updateAnimationScale();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(nReceiver!= null)
+            unregisterReceiver(nReceiver);
+
+        if(backupReceiver!= null)
+            unregisterReceiver(backupReceiver);
     }
 
     private void updateAnimationScale(){
@@ -164,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     private void addSendEmailTouchListener() {
-
         findViewById(R.id.email).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -183,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     private void addSupportDevelopmentTouchListener() {
-
         findViewById(R.id.support).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -194,12 +218,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 }
             }
         });
-        /*findViewById(R.id.support).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/dharmapoudel"));
-                startActivity(browserIntent);
-            }
-        });*/
     }
 
     private void addRateAppTouchListener() {
@@ -225,13 +243,6 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
     }
 
-    public void toggleData(View v){
-        boolean dataOn = Util.isDataToggled(this);
-        View dataToggle = v.findViewById(R.id.data_toggle);
-        dataToggle.setBackground(getDrawable(dataOn ? R.drawable.toggle_off: R.drawable.toggle_on));
-        Util.toggleData(this, dataOn);
-    }
-
     public void toggleMaxVolume(View v){
         Context context = getApplicationContext();
         Preferences pref = new Preferences(context);
@@ -252,8 +263,8 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         Preferences pref = new Preferences(context);
         pref.savePreference("pref_disable_max_brightness_warning", !pref.pref_disable_max_brightness_warning);
 
-        View maxVolumeToggle = v.findViewById(R.id.max_brightness_toggle);
-        maxVolumeToggle.setBackground(getDrawable(!pref.pref_disable_max_brightness_warning? R.drawable.toggle_on: R.drawable.toggle_off));
+        View maxBrightnessToggle = v.findViewById(R.id.max_brightness_toggle);
+        maxBrightnessToggle.setBackground(getDrawable(!pref.pref_disable_max_brightness_warning? R.drawable.toggle_on: R.drawable.toggle_off));
         Util.toggleMaxBrightnessWarning(this, pref.pref_disable_max_brightness_warning);
     }
 
@@ -263,53 +274,84 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
     }
 
+    public void toggleData(View v){
+        if( true || bp.isPurchased(PRODUCT_ID)) {
+            boolean dataOn = Util.isDataToggled(this);
+            View dataToggle = v.findViewById(R.id.data_toggle);
+            dataToggle.setBackground(getDrawable(dataOn ? R.drawable.toggle_off : R.drawable.toggle_on));
+            Util.toggleData(this, dataOn);
+        } else {
+            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void toggleAutoBackup(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
-        pref.savePreference("pref_auto_backup", !pref.pref_auto_backup);
+        if(true || bp.isPurchased(PRODUCT_ID)) {
+            Context context = getApplicationContext();
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_auto_backup", !pref.pref_auto_backup);
 
-        PermissionUtil.askForPermission(this);
+            PermissionUtil.askForPermission(this);
 
-        boolean autoBackupEnabled = pref.pref_auto_backup;
+            boolean autoBackupEnabled = pref.pref_auto_backup;
 
-        View toggle = v.findViewById(R.id.backup_toggle);
-        toggle.setBackground(getDrawable(!autoBackupEnabled? R.drawable.toggle_on: R.drawable.toggle_off));
+            View toggle = v.findViewById(R.id.backup_toggle);
+            toggle.setBackground(getDrawable(!autoBackupEnabled ? R.drawable.toggle_on : R.drawable.toggle_off));
+        } else {
+            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void toggleBTPopup(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
-        pref.savePreference("pref_no_popup_on_bt", !pref.pref_no_popup_on_bt);
+        if(true || bp.isPurchased(PRODUCT_ID)) {
+            Context context = getApplicationContext();
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_no_popup_on_bt", !pref.pref_no_popup_on_bt);
 
-        View toggle = v.findViewById(R.id.bt_popup_toggle);
-        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_bt? R.drawable.toggle_on: R.drawable.toggle_off));
+            View toggle = v.findViewById(R.id.bt_popup_toggle);
+            toggle.setBackground(getDrawable(!pref.pref_no_popup_on_bt ? R.drawable.toggle_on : R.drawable.toggle_off));
+        } else {
+            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void toggleWifiPopup(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
-        pref.savePreference("pref_no_popup_on_wifi", !pref.pref_no_popup_on_wifi);
+        if(true || bp.isPurchased(PRODUCT_ID)) {
+            Context context = getApplicationContext();
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_no_popup_on_wifi", !pref.pref_no_popup_on_wifi);
 
-        View toggle = v.findViewById(R.id.wifi_popup_toggle);
-        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_wifi? R.drawable.toggle_on: R.drawable.toggle_off));
+            View toggle = v.findViewById(R.id.wifi_popup_toggle);
+            toggle.setBackground(getDrawable(!pref.pref_no_popup_on_wifi ? R.drawable.toggle_on : R.drawable.toggle_off));
+        } else {
+            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void toggleSyncPopup(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
-        pref.savePreference("pref_no_popup_on_sync", !pref.pref_no_popup_on_sync);
+        if(true || bp.isPurchased(PRODUCT_ID)) {
+            Context context = getApplicationContext();
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_no_popup_on_sync", !pref.pref_no_popup_on_sync);
 
-        View toggle = v.findViewById(R.id.sync_popup_toggle);
-        toggle.setBackground(getDrawable(!pref.pref_no_popup_on_sync? R.drawable.toggle_on: R.drawable.toggle_off));
+            View toggle = v.findViewById(R.id.sync_popup_toggle);
+            toggle.setBackground(getDrawable(!pref.pref_no_popup_on_sync ? R.drawable.toggle_on : R.drawable.toggle_off));
+        } else {
+            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void toggleLocationPopup(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
-        pref.savePreference("pref_no_popup_gm_location", !pref.pref_no_popup_gm_location);
+        if(true || bp.isPurchased(PRODUCT_ID)) {
+            Context context = getApplicationContext();
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_no_popup_gm_location", !pref.pref_no_popup_gm_location);
 
-        View greyScaleToggle = v.findViewById(R.id.location_popup_toggle);
-        greyScaleToggle.setBackground(getDrawable(!pref.pref_no_popup_gm_location? R.drawable.toggle_on: R.drawable.toggle_off));
+            View greyScaleToggle = v.findViewById(R.id.location_popup_toggle);
+            greyScaleToggle.setBackground(getDrawable(!pref.pref_no_popup_gm_location ? R.drawable.toggle_on : R.drawable.toggle_off));
+        } else {
+            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -343,48 +385,43 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         View location_popup = findViewById(R.id.location_popup);
         View bt_popup = findViewById(R.id.bt_popup);
         View wifi_popup = findViewById(R.id.wifi_popup);
+        View sync_popup = findViewById(R.id.sync_popup);
 
         data.setAlpha(0.5f);
-        data.setEnabled(false);
         backup.setAlpha(0.5f);
-        backup.setEnabled(false);
         location_popup.setAlpha(0.5f);
-        location_popup.setEnabled(false);
         bt_popup.setAlpha(0.5f);
-        bt_popup.setEnabled(false);
         wifi_popup.setAlpha(0.5f);
-        wifi_popup.setEnabled(false);
+        sync_popup.setAlpha(0.5f);
 
         SharedPreferences.Editor editor = pref.getEditor();
         editor.putBoolean(PRODUCT_ID, false);
 
 
-        if(bp.isPurchased(PRODUCT_ID)){
-            if (bp.loadOwnedPurchasesFromGoogle()) {
+        //if(bp.isPurchased(PRODUCT_ID)){
+            //if (bp.loadOwnedPurchasesFromGoogle()) {
 
                 editor.putBoolean(PRODUCT_ID, true);
 
                 data.setAlpha(1.0f);
-                data.setEnabled(true);
                 data.setVisibility(View.VISIBLE);
 
                 backup.setAlpha(1.0f);
-                backup.setEnabled(true);
                 backup.setVisibility(View.VISIBLE);
 
                 location_popup.setAlpha(1.0f);
-                location_popup.setEnabled(true);
                 location_popup.setVisibility(View.VISIBLE);
 
                 bt_popup.setAlpha(1.0f);
-                bt_popup.setEnabled(true);
                 bt_popup.setVisibility(View.VISIBLE);
 
                 wifi_popup.setAlpha(1.0f);
-                wifi_popup.setEnabled(true);
                 wifi_popup.setVisibility(View.VISIBLE);
-            }
-        }
+
+                sync_popup.setAlpha(1.0f);
+                sync_popup.setVisibility(View.VISIBLE);
+            //}
+        //}
         editor.apply();
     }
 
@@ -407,5 +444,15 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         for (AccessibilityServiceInfo service : runningServices) {
             Log.i(TAG, service.getId());
         }*/
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        //set the max brightness toggle
+        Preferences pref = new Preferences(context);
+        if(maxBrightnessToggle != null) {
+            maxBrightnessToggle.setBackground(getDrawable(pref.pref_disable_max_brightness_warning ? R.drawable.toggle_on : R.drawable.toggle_off));
+        }
     }
 }

@@ -21,18 +21,12 @@ public class BootIntentReceiver extends BroadcastReceiver {
 
         String action = intent.getAction();
 
-        Toast.makeText(context, "Received boot completed " + action, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Received boot completed " + action, Toast.LENGTH_SHORT).show();
 
         if (action == null) {
 
             if(pref.pref_disable_max_volume_warning )
                 Util.toggleMaxVolumeWarning(context, false);
-
-            if(pref.pref_disable_max_brightness_warning )
-                Util.toggleMaxBrightnessWarning(context, false);
-
-            if(pref.pref_enable_greyscale )
-                Util.toggleMaxBrightnessWarning(context, false);
 
             //AnimatorDurationUtil.setAnimatorScale(context, pref.pref_animation_duration);
 
