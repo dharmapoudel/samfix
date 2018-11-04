@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -259,13 +260,21 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleMaxBrightness(View v){
-        Context context = getApplicationContext();
-        Preferences pref = new Preferences(context);
-        pref.savePreference("pref_disable_max_brightness_warning", !pref.pref_disable_max_brightness_warning);
+        PackageManager pm = context.getPackageManager();
+        boolean isInstalled = Util.isPackageInstalled("com.dharmapoudel.samfix.addon", pm);
+        if(isInstalled) {
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_disable_max_brightness_warning", !pref.pref_disable_max_brightness_warning);
 
-        View maxBrightnessToggle = v.findViewById(R.id.max_brightness_toggle);
-        maxBrightnessToggle.setBackground(getDrawable(!pref.pref_disable_max_brightness_warning? R.drawable.toggle_on: R.drawable.toggle_off));
-        Util.toggleMaxBrightnessWarning(this, pref.pref_disable_max_brightness_warning);
+            View maxBrightnessToggle = v.findViewById(R.id.max_brightness_toggle);
+            maxBrightnessToggle.setBackground(getDrawable(!pref.pref_disable_max_brightness_warning? R.drawable.toggle_on: R.drawable.toggle_off));
+            Util.toggleMaxBrightnessWarning(this, pref.pref_disable_max_brightness_warning);
+        } else {
+            Toast.makeText(context, "Install SamFix Addon to enable this feature", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://labs.xda-developers.com/store/app/com.dharmapoudel.samfix.addon"));
+            context.startActivity(intent);
+        }
     }
 
     public void setAnimationScale(View v){
@@ -275,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleData(View v){
-        if( true || bp.isPurchased(PRODUCT_ID)) {
+        if(bp.isPurchased(PRODUCT_ID)) {
             boolean dataOn = Util.isDataToggled(this);
             View dataToggle = v.findViewById(R.id.data_toggle);
             dataToggle.setBackground(getDrawable(dataOn ? R.drawable.toggle_off : R.drawable.toggle_on));
@@ -286,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleAutoBackup(View v){
-        if(true || bp.isPurchased(PRODUCT_ID)) {
+        if(bp.isPurchased(PRODUCT_ID)) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_auto_backup", !pref.pref_auto_backup);
@@ -303,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleBTPopup(View v){
-        if(true || bp.isPurchased(PRODUCT_ID)) {
+        if(bp.isPurchased(PRODUCT_ID)) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_no_popup_on_bt", !pref.pref_no_popup_on_bt);
@@ -316,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleWifiPopup(View v){
-        if(true || bp.isPurchased(PRODUCT_ID)) {
+        if(bp.isPurchased(PRODUCT_ID)) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_no_popup_on_wifi", !pref.pref_no_popup_on_wifi);
@@ -329,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleSyncPopup(View v){
-        if(true || bp.isPurchased(PRODUCT_ID)) {
+        if(bp.isPurchased(PRODUCT_ID)) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_no_popup_on_sync", !pref.pref_no_popup_on_sync);
@@ -342,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
     }
 
     public void toggleLocationPopup(View v){
-        if(true || bp.isPurchased(PRODUCT_ID)) {
+        if(bp.isPurchased(PRODUCT_ID)) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_no_popup_gm_location", !pref.pref_no_popup_gm_location);
@@ -398,8 +407,8 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         editor.putBoolean(PRODUCT_ID, false);
 
 
-        //if(bp.isPurchased(PRODUCT_ID)){
-            //if (bp.loadOwnedPurchasesFromGoogle()) {
+        if(bp.isPurchased(PRODUCT_ID)){
+            if (bp.loadOwnedPurchasesFromGoogle()) {
 
                 editor.putBoolean(PRODUCT_ID, true);
 
@@ -420,8 +429,8 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
                 sync_popup.setAlpha(1.0f);
                 sync_popup.setVisibility(View.VISIBLE);
-            //}
-        //}
+            }
+        }
         editor.apply();
     }
 

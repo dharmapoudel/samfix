@@ -5,22 +5,18 @@ import android.app.Dialog;
 import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.provider.Settings;
 import android.provider.Settings.Global;
 import android.provider.Settings.Secure;
-import android.provider.Settings.System;
 import android.util.Log;
 import android.widget.Toast;
 
 public class Util {
-    private static final String TAG = Util.class.getSimpleName();
 
     private static final String PERMISSION = "android.permission.WRITE_SECURE_SETTINGS";
     private static final String COMMAND    = "adb shell pm grant " + BuildConfig.APPLICATION_ID + " " + PERMISSION;
@@ -28,9 +24,7 @@ public class Util {
 
     private static final String DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled";
     private static final String DISPLAY_DALTONIZER         = "accessibility_display_daltonizer";
-
     private static final String AUDIO_SAFE_VOLUME_STATE    = "audio_safe_volume_state";
-    private static final String MAX_BRIGHTNESS_DIALOG    = "shown_max_brightness_dialog";
 
     public static boolean hasPermission(Context context) {
         return context.checkCallingOrSelfPermission(PERMISSION) == PackageManager.PERMISSION_GRANTED;
@@ -78,26 +72,17 @@ public class Util {
     }
 
     public static void toggleMaxVolumeWarning(Context context, boolean value) {
-        //Toast.makeText(context, "Toggling volume warning to: " + !value, Toast.LENGTH_LONG).show();
         Global.putInt(context.getContentResolver(), AUDIO_SAFE_VOLUME_STATE, value ? 3 : 2);
     }
 
     public static void toggleMaxBrightnessWarning(Context context, boolean value) {
-        PackageManager pm = context.getPackageManager();
-        boolean isInstalled = isPackageInstalled("com.dharmapoudel.samfix.addon", pm);
-        if(isInstalled) {
-            Intent intent = new Intent("com.dharmapoudel.samfix.addon.Brightness");
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-        } else {
-            Toast.makeText(context, "Install SamFix Addon to enable this feature", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://labs.xda-developers.com/store/app/com.dharmapoudel.samfix.addon"));
-            context.startActivity(intent);
-        }
+        Intent intent = new Intent("com.dharmapoudel.samfix.addon.Brightness");
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        Log.e(Util.class.getSimpleName(), "SamFix Brightness broadcast sent!");
     }
 
-    private static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
         boolean found = true;
         try {
             packageManager.getPackageInfo(packageName, 0);

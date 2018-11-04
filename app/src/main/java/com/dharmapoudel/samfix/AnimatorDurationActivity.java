@@ -9,10 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.CheckedTextView;
 
-/**
- * An Activity which allows selecting the animator duration scale from a full list, accessed by
- * long pressing the quick action tile.
- */
+
 public class AnimatorDurationActivity extends Activity {
 
     @Override

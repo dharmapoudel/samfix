@@ -3,6 +3,7 @@ package com.dharmapoudel.samfix;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class SamFixBrightnessAddonBroadcastReceiver extends BroadcastReceiver {
 
@@ -16,8 +17,7 @@ public class SamFixBrightnessAddonBroadcastReceiver extends BroadcastReceiver {
                 Preferences pref = new Preferences(context);
                 pref.savePreference("pref_disable_max_brightness_warning", value);
 
-
+                Log.i(SamFixBrightnessAddonBroadcastReceiver.class.getSimpleName(), "SamFix brightness broadcast sent from addon is received with value : " + value);
             }
         }
-
     }
