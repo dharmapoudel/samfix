@@ -7,7 +7,7 @@ Fix all annoyances on Samsung devices.
 
 [<img src="https://labs.xda-developers.com/static/images/ic_web.png"
      alt="Get it on XDA"
-     height="80">](hhttps://labs.xda-developers.com/store/app/com.dharmapoudel.samfix)
+     height="80">](https://labs.xda-developers.com/store/app/com.dharmapoudel.samfix)
 
 ## Target platforms :
 
