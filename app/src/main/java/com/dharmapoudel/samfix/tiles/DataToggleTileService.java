@@ -22,7 +22,7 @@ public class DataToggleTileService extends TileService {
         super.onClick();
 
         preferences = new Preferences(getApplicationContext());
-        if(preferences.supportEnabled) {
+        if(preferences.pref_license_check_broadcast_value) {
 
             if (!Util.hasPermission(this)) {
                 showDialog(Util.createTipsDialog(this));

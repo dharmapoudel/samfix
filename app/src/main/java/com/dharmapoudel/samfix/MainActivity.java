@@ -6,81 +6,85 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.TransactionDetails;
 import com.dharmapoudel.samfix.autobackup.BackupReceiver;
 
+import static android.content.Intent.FLAG_RECEIVER_FOREGROUND;
 import static com.dharmapoudel.samfix.BootIntentReceiver.scheduleSettingsUpdateJob;
 import static com.dharmapoudel.samfix.BootIntentReceiver.unscheduleSettingsUpdateJob;
 
-public class MainActivity extends AppCompatActivity implements  BillingProcessor.IBillingHandler, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity {
 
-    private BillingProcessor bp;
     private Preferences pref;
     private Context context;
+    private static Context mContext;
 
-    private SamFixBrightnessAddonBroadcastReceiver nReceiver;
+    private SamFixBrightnessAddonBroadcastReceiver samFixBrightnessAddonBroadcastReceiver;
     private BackupReceiver backupReceiver;
+    private PremiumCheckBroadcastReceiver premiumCheckReceiver;
+    private static boolean licenseCheckBroadcastSent;
 
 
-    private View maxBrightnessToggle;
-
+    private static View maxBrightnessToggle, data, backup, location_popup, bt_popup, wifi_popup, sync_popup;
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    String PRODUCT_ID = "samfix";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
 
         //action bar settings
         ActionBar actionBar = getSupportActionBar();
-        //remove the shadow
         actionBar.setElevation(0);
         actionBar.hide();
 
-        //initialize billing
-        String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx//FhYCIEAQAgj1yfnaD1nLcI41fWkkx05wefBOGK3RP5pFRoE6w1c63uxf7hmHjLbdm8oAqAvIgekadrmaSnt5aiAk3W8GdGFuLBdP1TgvfCFwAboBle/0Bj/Cr2kkQnUl39TkVmMqe6cUhz/W0pH3kn/BLfd9nsdBhy6AVFnpECfoc+pNZiJ5zEMWL67JGiHXG6/4BTGZ0AYEFsLhjVw/R5SSiLRqqbcMZeb50Iu5sULiACanJtTH4VYcr92FxqYWGeHXjkrcG37YJyiWt+ez7H+9bEKDF0GPgFmzx+bXU6apKhm9hbpnhwBiDA2vv5t1iQLwVjvDNMpft4ltlZQIDAQAB";
-        bp = new BillingProcessor(this, LICENSE_KEY, this);
-        bp.initialize();
-
 
         //register the samfix brightness addon broadcast receiver
-        nReceiver = new SamFixBrightnessAddonBroadcastReceiver();
+        samFixBrightnessAddonBroadcastReceiver = new SamFixBrightnessAddonBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(getResources().getString(R.string.samfix_brightness_broadcast_intent));
-        registerReceiver(nReceiver, filter);
+        registerReceiver(samFixBrightnessAddonBroadcastReceiver, filter);
 
         backupReceiver = new BackupReceiver();
         IntentFilter i = new IntentFilter();
         i.addAction("android.intent.action.PACKAGE_ADDED");
         registerReceiver(backupReceiver, i);
 
+        premiumCheckReceiver = new PremiumCheckBroadcastReceiver();
+        IntentFilter i2 = new IntentFilter();
+        i2.addAction(getString(R.string.samfix_filter_action));
+        registerReceiver(premiumCheckReceiver, i2);
 
-        //registerReceiver(nReceiver, filter, getResources().getString(R.string.samfix_brightness_broadcast_intent), null);
 
+        mContext = this;
+        context = getApplicationContext();
+        pref = new Preferences(context);
 
+        licenseCheckBroadcastSent = false;
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mContext = this;
         context = getApplicationContext();
         pref = new Preferences(context);
 
         if (!Util.hasPermission(this)) {
+
             Dialog dialog = Util.createTipsDialog(this);
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -89,7 +93,22 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
                 }
             });
             dialog.show();
+
         } else {
+
+            sendLicenseCheckBroadCast();
+
+            //Toast.makeText(getApplicationContext(), "Billing initialized!", Toast.LENGTH_SHORT).show();
+            data = findViewById(R.id.data);
+            backup = findViewById(R.id.backup);
+            location_popup = findViewById(R.id.location_popup);
+            bt_popup = findViewById(R.id.bt_popup);
+            wifi_popup = findViewById(R.id.wifi_popup);
+            sync_popup = findViewById(R.id.sync_popup);
+
+            if(!pref.pref_license_check_broadcast_value){
+                disableToggles();
+            }
 
             //automatically add to accessibility services
             updateAccessibilityServices();
@@ -116,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
             }
 
             //set max brightness warning switch
+            maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
             if(pref.pref_disable_max_brightness_warning ) {
                 maxBrightnessToggle = findViewById(R.id.max_brightness_toggle);
                 maxBrightnessToggle.setBackground(getDrawable(R.drawable.toggle_on));
@@ -164,23 +184,21 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         addRateAppTouchListener();
         addSendEmailTouchListener();
         addSupportDevelopmentTouchListener();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         updateAnimationScale();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(nReceiver!= null)
-            unregisterReceiver(nReceiver);
+        if(samFixBrightnessAddonBroadcastReceiver != null)
+            unregisterReceiver(samFixBrightnessAddonBroadcastReceiver);
 
         if(backupReceiver!= null)
             unregisterReceiver(backupReceiver);
+
+        if(premiumCheckReceiver != null)
+            unregisterReceiver(premiumCheckReceiver);
     }
 
     private void updateAnimationScale(){
@@ -212,11 +230,11 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         findViewById(R.id.support).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                boolean isBillingProcessorAvailable = bp.isIabServiceAvailable(MainActivity.this);
+                /*boolean isBillingProcessorAvailable = bp.isIabServiceAvailable(MainActivity.this);
                 boolean isOneTimePurchaseSupported = bp.isOneTimePurchaseSupported();
                 if (isBillingProcessorAvailable && isOneTimePurchaseSupported) {
                     bp.purchase(MainActivity.this, PRODUCT_ID, null);
-                }
+                }*/
             }
         });
     }
@@ -283,21 +301,67 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
 
     }
 
+    public void checkLicense(){
+        PackageManager pm = context.getPackageManager();
+        boolean isInstalled = Util.isPackageInstalled("com.dharmapoudel.proapp", pm);
+        if(isInstalled) {
+            if(!licenseCheckBroadcastSent) {
+                //pref.savePreference("license_check_broadcast_sent", true);
+                licenseCheckBroadcastSent = true;
+                Intent intent = new Intent(getApplicationContext().getString(R.string.pro_app_filter_action));
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                intent.setFlags(FLAG_RECEIVER_FOREGROUND);
+                context.sendBroadcast(intent);
+                Log.e(Util.class.getSimpleName(), "Samfix License Check Brightness broadcast sent!");
+            }
+        }else {
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_license_check_broadcast_value", false);
+            licenseCheckBroadcastSent = false;
+
+            Toast.makeText(context, "Install Pro Key to enable this feature", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.dharmapoudel.proapp"));
+            context.startActivity(intent);
+        }
+    }
+    public void sendLicenseCheckBroadCast(){
+        PackageManager pm = getApplicationContext().getPackageManager();
+        boolean isInstalled = Util.isPackageInstalled("com.dharmapoudel.proapp", pm);
+        if(isInstalled) {
+            if(!licenseCheckBroadcastSent) {
+                //pref.savePreference("license_check_broadcast_sent", true);
+                licenseCheckBroadcastSent = true;
+                Intent intent = new Intent(getApplicationContext().getString(R.string.pro_app_filter_action));
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                intent.addFlags(FLAG_RECEIVER_FOREGROUND);
+                intent.setFlags(FLAG_RECEIVER_FOREGROUND);
+                context.sendBroadcast(intent);
+                Log.e(Util.class.getSimpleName(), "Samfix License Check Brightness broadcast sent!");
+            }
+        } else {
+            licenseCheckBroadcastSent = false;
+            Preferences pref = new Preferences(context);
+            pref.savePreference("pref_license_check_broadcast_value", false);
+        }
+    }
+
     public void toggleData(View v){
-        if(bp.isPurchased(PRODUCT_ID)) {
+        Preferences pref = new Preferences(v.getContext());
+        if(pref.pref_license_check_broadcast_value) {
             boolean dataOn = Util.isDataToggled(this);
             View dataToggle = v.findViewById(R.id.data_toggle);
             dataToggle.setBackground(getDrawable(dataOn ? R.drawable.toggle_off : R.drawable.toggle_on));
             Util.toggleData(this, dataOn);
         } else {
-            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+            checkLicense();
+            //Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void toggleAutoBackup(View v){
-        if(bp.isPurchased(PRODUCT_ID)) {
-            Context context = getApplicationContext();
-            Preferences pref = new Preferences(context);
+        Preferences pref = new Preferences(v.getContext());
+        if(pref.pref_license_check_broadcast_value) {
             pref.savePreference("pref_auto_backup", !pref.pref_auto_backup);
 
             PermissionUtil.askForPermission(this);
@@ -307,38 +371,39 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
             View toggle = v.findViewById(R.id.backup_toggle);
             toggle.setBackground(getDrawable(!autoBackupEnabled ? R.drawable.toggle_on : R.drawable.toggle_off));
         } else {
-            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+            checkLicense();
+            //Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void toggleBTPopup(View v){
-        if(bp.isPurchased(PRODUCT_ID)) {
-            Context context = getApplicationContext();
-            Preferences pref = new Preferences(context);
+        Preferences pref = new Preferences(v.getContext());
+        if(pref.pref_license_check_broadcast_value) {
             pref.savePreference("pref_no_popup_on_bt", !pref.pref_no_popup_on_bt);
 
             View toggle = v.findViewById(R.id.bt_popup_toggle);
             toggle.setBackground(getDrawable(!pref.pref_no_popup_on_bt ? R.drawable.toggle_on : R.drawable.toggle_off));
         } else {
-            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+            checkLicense();
+            //Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void toggleWifiPopup(View v){
-        if(bp.isPurchased(PRODUCT_ID)) {
-            Context context = getApplicationContext();
-            Preferences pref = new Preferences(context);
+        Preferences pref = new Preferences(v.getContext());
+        if(pref.pref_license_check_broadcast_value) {
             pref.savePreference("pref_no_popup_on_wifi", !pref.pref_no_popup_on_wifi);
 
             View toggle = v.findViewById(R.id.wifi_popup_toggle);
             toggle.setBackground(getDrawable(!pref.pref_no_popup_on_wifi ? R.drawable.toggle_on : R.drawable.toggle_off));
         } else {
-            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+            checkLicense();
+            //Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void toggleSyncPopup(View v){
-        if(bp.isPurchased(PRODUCT_ID)) {
+        if(pref.pref_license_check_broadcast_value) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_no_popup_on_sync", !pref.pref_no_popup_on_sync);
@@ -346,12 +411,13 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
             View toggle = v.findViewById(R.id.sync_popup_toggle);
             toggle.setBackground(getDrawable(!pref.pref_no_popup_on_sync ? R.drawable.toggle_on : R.drawable.toggle_off));
         } else {
-            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+            checkLicense();
+            //Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void toggleLocationPopup(View v){
-        if(bp.isPurchased(PRODUCT_ID)) {
+        if(pref.pref_license_check_broadcast_value) {
             Context context = getApplicationContext();
             Preferences pref = new Preferences(context);
             pref.savePreference("pref_no_popup_gm_location", !pref.pref_no_popup_gm_location);
@@ -359,80 +425,42 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
             View greyScaleToggle = v.findViewById(R.id.location_popup_toggle);
             greyScaleToggle.setBackground(getDrawable(!pref.pref_no_popup_gm_location ? R.drawable.toggle_on : R.drawable.toggle_off));
         } else {
-            Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
+            checkLicense();
+            //Toast.makeText(context, "Please scroll to the bottom and donate to enable", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!bp.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    public static void enableToggles() {
+
+        data.setAlpha(1.0f);
+        backup.setAlpha(1.0f);
+        location_popup.setAlpha(1.0f);
+        bt_popup.setAlpha(1.0f);
+        wifi_popup.setAlpha(1.0f);
+        sync_popup.setAlpha(1.0f);
     }
 
-    @Override
-    public void onProductPurchased(@NonNull String productId, @Nullable TransactionDetails details) {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.thank_you), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPurchaseHistoryRestored() {
-        //Toast.makeText(getApplicationContext(), "History Restored!", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onBillingError(int errorCode, @Nullable Throwable error) {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.next_time), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onBillingInitialized() {
-        //Toast.makeText(getApplicationContext(), "Billing initialized!", Toast.LENGTH_SHORT).show();
-        View data = findViewById(R.id.data);
-        View backup = findViewById(R.id.backup);
-        View location_popup = findViewById(R.id.location_popup);
-        View bt_popup = findViewById(R.id.bt_popup);
-        View wifi_popup = findViewById(R.id.wifi_popup);
-        View sync_popup = findViewById(R.id.sync_popup);
-
+    public static void disableToggles() {
         data.setAlpha(0.5f);
         backup.setAlpha(0.5f);
         location_popup.setAlpha(0.5f);
         bt_popup.setAlpha(0.5f);
         wifi_popup.setAlpha(0.5f);
         sync_popup.setAlpha(0.5f);
-
-        SharedPreferences.Editor editor = pref.getEditor();
-        editor.putBoolean(PRODUCT_ID, false);
-
-
-        if(bp.isPurchased(PRODUCT_ID)){
-            if (bp.loadOwnedPurchasesFromGoogle()) {
-
-                editor.putBoolean(PRODUCT_ID, true);
-
-                data.setAlpha(1.0f);
-                data.setVisibility(View.VISIBLE);
-
-                backup.setAlpha(1.0f);
-                backup.setVisibility(View.VISIBLE);
-
-                location_popup.setAlpha(1.0f);
-                location_popup.setVisibility(View.VISIBLE);
-
-                bt_popup.setAlpha(1.0f);
-                bt_popup.setVisibility(View.VISIBLE);
-
-                wifi_popup.setAlpha(1.0f);
-                wifi_popup.setVisibility(View.VISIBLE);
-
-                sync_popup.setAlpha(1.0f);
-                sync_popup.setVisibility(View.VISIBLE);
-            }
-        }
-        editor.apply();
     }
+
+    public static void resetToggles(Context context){
+        Preferences pref = new Preferences(context);
+        pref.savePreference("pref_auto_backup", false);
+        pref.savePreference("pref_no_popup_gm_location", false);
+        pref.savePreference("pref_no_popup_on_sync", false);
+        pref.savePreference("pref_no_popup_on_wifi", false);
+        pref.savePreference("pref_no_popup_on_bt", false);
+        pref.savePreference("pref_license_check_broadcast_value", false);
+    }
+
+
 
     /*public void onAccessibilityEnableClick(View v) {
         Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
@@ -455,13 +483,57 @@ public class MainActivity extends AppCompatActivity implements  BillingProcessor
         }*/
     }
 
+    public static Context getContext(){
+        return mContext;
+    }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //set the max brightness toggle
-        Preferences pref = new Preferences(context);
-        if(maxBrightnessToggle != null) {
-            maxBrightnessToggle.setBackground(getDrawable(pref.pref_disable_max_brightness_warning ? R.drawable.toggle_on : R.drawable.toggle_off));
+
+
+    public static class SamFixBrightnessAddonBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String act = intent.getAction();
+            if(act != null && act.equals(context.getResources().getString(R.string.samfix_brightness_broadcast_intent)) ) {
+                boolean value = intent.getBooleanExtra("brightness_value", false);
+
+                //save the value to the preferences
+                Preferences pref = new Preferences(context);
+                pref.savePreference("pref_disable_max_brightness_warning", value);
+
+
+                if(maxBrightnessToggle != null) {
+                    maxBrightnessToggle.setBackground(getContext().getDrawable(pref.pref_disable_max_brightness_warning ? R.drawable.toggle_on : R.drawable.toggle_off));
+                }
+
+                Log.i(SamFixBrightnessAddonBroadcastReceiver.class.getSimpleName(), "SamFix brightness broadcast sent from addon is received with value : " + value);
+            }
+        }
+    }
+
+
+    public static class PremiumCheckBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String act = intent.getAction();
+            if(act != null && act.equals(context.getResources().getString(R.string.samfix_filter_action)) ) {
+                boolean value = "true".equalsIgnoreCase(intent.getStringExtra("calibration_value"));
+
+                //save the value to the preferences
+                Preferences pref = new Preferences(context);
+                pref.savePreference("pref_license_check_broadcast_value", value);
+                licenseCheckBroadcastSent = false;
+
+                if(value){
+                    enableToggles();
+                } else {
+                    disableToggles();
+                    resetToggles(context);
+                }
+
+                Log.i(PremiumCheckBroadcastReceiver.class.getSimpleName(), "SamFix license checked broadcast sent from pro  is received with value : " + value);
+            }
         }
     }
 }

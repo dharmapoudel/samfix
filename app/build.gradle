@@ -31,8 +31,8 @@ android {
         applicationId "com.dharmapoudel.samfix"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 18
-        versionName "1.18"
+        versionCode 22
+        versionName "1.22"
         setProperty("archivesBaseName", "samfix-v" + versionCode + "(" + versionName + ")" + "_" + formattedDate)
     }
 
@@ -67,8 +67,9 @@ android {
     }
 
     dependencies {
+        implementation files('RootTools2.6.jar')
         implementation 'com.android.support:appcompat-v7:28.0.0'
         implementation 'com.android.support:cardview-v7:28.0.0'
-        implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+        implementation 'com.anjlab.android.iab.v3:library:1.1.0'
     }
 }
