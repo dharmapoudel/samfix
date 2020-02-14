@@ -27,4 +27,4 @@ API 21 or later
 
 ## Screenshots :
 
-<img src="screenshots/Screenshot_20200213-223641_SamFix.png" width="200" /><img src="screenshots/Screenshot_20200213-223649_SamFix.png" width="200" /><img src="screenshots/Screenshot_20200213-223500_SamFix.png" width="200" />
+<img src="screenshots/Screenshot_20200213-223641_SamFix.png" width="250" /> <img src="screenshots/Screenshot_20200213-223649_SamFix.png" width="250" /> <img src="screenshots/Screenshot_20200213-223500_SamFix.png" width="250" />
